@@ -13,3 +13,5 @@
 2020-05-01 13:28:29.0392 [DEBUG] Connecting
 2020-05-01 13:28:29.0651 [DEBUG] Connecting to room (123286:SceneFusion:SceneFusion) via TCP at roommanager-ec2-35-164-71-216.kinematicsoup.com:21312
 2020-05-01 13:52:29.9410 [DEBUG] Sent C:/Users/jagge/OneDrive/Desktop/QuarantineJameroo/ElectricityBox/KSEditorLogs/SessionLogs/session.123286-637239365091060511.log
+2020-05-01 14:05:00.6014 [DEBUG] Connecting
+2020-05-01 14:05:00.6144 [DEBUG] Connecting to room (123290:SceneFusion:SceneFusion) via TCP at roommanager-ec2-13-124-178-67.kinematicsoup.com:21312
