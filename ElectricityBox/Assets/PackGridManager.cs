@@ -77,7 +77,7 @@ public class PackGridManager : MonoBehaviour
         public void SetObjectAt(int x, int y, int id)
         {
             if (SomethingAt(x, y))
-                Debug.LogError($"Setting an object at {x,y} while there's something there!");
+                Debug.LogError($"Setting an object at {x},{y} while there's something there!");
             tiles[x,y].SetGridObject(id);
         }
     }
