@@ -9,16 +9,9 @@
 2020-05-01 12:28:28.4674 [INFO] Launching Session: main
 2020-05-01 12:28:29.0480 [DEBUG] Connecting
 2020-05-01 12:28:29.0650 [DEBUG] Connecting to room (123281:SceneFusion:SceneFusion) via TCP at roommanager-ec2-35-164-71-216.kinematicsoup.com:21312
-2020-05-01 13:24:23.0097 [DEBUG] Sent D:/Projects/QuarantineJameroo/ElectricityBox/KSEditorLogs/SessionLogs/session.123281-637239329090710132.log
-2020-05-01 13:28:21.1594 [INFO] Launching Session: main
-2020-05-01 13:28:21.7437 [DEBUG] Connecting
-2020-05-01 13:28:21.7567 [DEBUG] Connecting to room (123286:SceneFusion:SceneFusion) via TCP at roommanager-ec2-35-164-71-216.kinematicsoup.com:21312
-2020-05-01 13:37:36.9398 [DEBUG] Sent D:/Projects/QuarantineJameroo/ElectricityBox/KSEditorLogs/SessionLogs/session.123286-637239365017577651.log
-2020-05-01 13:59:09.4509 [DEBUG] Scene Fusion version 1.8.7-0
-2020-05-01 13:59:12.4214 [INFO] Launching Session: main
-2020-05-01 13:59:13.0733 [DEBUG] Connecting
-2020-05-01 13:59:13.0953 [DEBUG] Connecting to room (123289:SceneFusion:SceneFusion) via TCP at roommanager-ec2-35-164-71-216.kinematicsoup.com:21312
-2020-05-01 13:59:19.5040 [DEBUG] Sent D:/Projects/QuarantineJameroo/ElectricityBox/KSEditorLogs/SessionLogs/session.123289-637239383531743011.log
-2020-05-01 14:04:37.3521 [INFO] Launching Session: main
-2020-05-01 14:04:41.4908 [DEBUG] Connecting
-2020-05-01 14:04:41.5028 [DEBUG] Connecting to room (123290:SceneFusion:SceneFusion) via TCP at roommanager-ec2-13-124-178-67.kinematicsoup.com:21312
+2020-05-01 13:27:21.0128 [DEBUG] Scene Fusion version 1.8.7-0
+2020-05-01 13:28:29.0392 [DEBUG] Connecting
+2020-05-01 13:28:29.0651 [DEBUG] Connecting to room (123286:SceneFusion:SceneFusion) via TCP at roommanager-ec2-35-164-71-216.kinematicsoup.com:21312
+2020-05-01 13:52:29.9410 [DEBUG] Sent C:/Users/jagge/OneDrive/Desktop/QuarantineJameroo/ElectricityBox/KSEditorLogs/SessionLogs/session.123286-637239365091060511.log
+2020-05-01 14:05:00.6014 [DEBUG] Connecting
+2020-05-01 14:05:00.6144 [DEBUG] Connecting to room (123290:SceneFusion:SceneFusion) via TCP at roommanager-ec2-13-124-178-67.kinematicsoup.com:21312
