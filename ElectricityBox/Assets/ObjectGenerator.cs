@@ -45,19 +45,30 @@ public class ObjectGenerator : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        for (int i = 0; i < 1200; ++i)
+        {
+            Spawn(Time.fixedDeltaTime);
+            Advance(Time.fixedDeltaTime);
+        }
     }
 
     // Update is called once per frame
     void Update()
     {
+        Spawn(Time.deltaTime);
+        Advance(Time.deltaTime);
+    }
+
+    void Spawn(float dt)
+    {
         int random = Random.Range(0, objects.Length);
 
-        objectsToSpawn += Time.deltaTime / spawnInterval;
-        
+        objectsToSpawn += dt / spawnInterval;
+
         for (; objectsToSpawn > 1.0f; --objectsToSpawn)
         {
             GameObject newObj = Instantiate(objects[random], gameObject.transform);
-            
+
             var pos = new Vector3(
                 Random.Range(spawnMinPos.x, spawnMaxPos.x),
                 Random.Range(spawnMinPos.y, spawnMaxPos.y),
@@ -67,7 +78,7 @@ public class ObjectGenerator : MonoBehaviour
             var rot = Random.Range(spawnMinRotation, spawnMaxRotation);
             newObj.transform.SetPositionAndRotation(pos, Quaternion.AngleAxis(rot, Vector3.up));
             newObj.transform.localScale *= Random.Range(spawnMinSize, spawnMaxSize);
-            
+
             var rotSpeed = Random.Range(spawnMinRotationSpeed, spawnMaxRotationSpeed);
             var moveSpeed = Random.Range(spawnMinMoveSpeed, spawnMaxMoveSpeed);
             var env = new Environment(newObj.transform, rotSpeed, moveSpeed);
@@ -86,16 +97,19 @@ public class ObjectGenerator : MonoBehaviour
             if (isFull)
                 managedObjects.Add(env);
         }
+    }
 
+    void Advance(float dt)
+    {
         for (var index = 0; index < managedObjects.Count; index++)
         {
             var env = managedObjects[index];
             if (!env.HasValue) continue;
-            
+
             var pos = env.Value.transform.position;
-            pos.x -= env.Value.moveSpeed * Time.deltaTime;
-            
-            env.Value.transform.Rotate(Vector3.up, env.Value.rotationSpeed * Time.deltaTime);
+            pos.x -= env.Value.moveSpeed * dt;
+
+            env.Value.transform.Rotate(Vector3.up, env.Value.rotationSpeed * dt);
             env.Value.transform.position = pos;
 
             if (pos.x < -400.0f)
