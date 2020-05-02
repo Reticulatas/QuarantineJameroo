@@ -1277,6 +1277,8 @@ MonoBehaviour:
   spawnMaxPos: {x: 400, y: 0.5, z: 200}
   spawnMinRotationSpeed: 0
   spawnMaxRotationSpeed: 60
+  spawnMinRotation: 0
+  spawnMaxRotation: 0
   spawnMinMoveSpeed: 30
   spawnMaxMoveSpeed: 30
   spawnMinSize: 1
@@ -1289,7 +1291,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1453101765}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 7.8539333, y: -1.7415764, z: 21.54807}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -1302,18 +1304,20 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1453101765}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 47248f13738b28b4f889aba190e84d7e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   objects:
   - {fileID: 100000, guid: 8da72e9a2ba2b0d4aa84f50b8f19b35f, type: 3}
-  spawnInterval: 0.01
+  spawnInterval: 0
   spawnMinPos: {x: 300, y: 0.5, z: -5}
   spawnMaxPos: {x: 400, y: 0.5, z: 200}
   spawnMinRotationSpeed: 0
   spawnMaxRotationSpeed: 0
+  spawnMinRotation: 0
+  spawnMaxRotation: 0
   spawnMinMoveSpeed: 30
   spawnMaxMoveSpeed: 30
   spawnMinSize: 1
@@ -1339,6 +1343,8 @@ MonoBehaviour:
   spawnMaxPos: {x: 400, y: 0.5, z: 200}
   spawnMinRotationSpeed: 0
   spawnMaxRotationSpeed: 60
+  spawnMinRotation: 0
+  spawnMaxRotation: 0
   spawnMinMoveSpeed: 30
   spawnMaxMoveSpeed: 30
   spawnMinSize: 1
@@ -1364,6 +1370,8 @@ MonoBehaviour:
   spawnMaxPos: {x: 400, y: 0.5, z: 200}
   spawnMinRotationSpeed: 0
   spawnMaxRotationSpeed: 0
+  spawnMinRotation: 0
+  spawnMaxRotation: 0
   spawnMinMoveSpeed: 30
   spawnMaxMoveSpeed: 30
   spawnMinSize: 0.5
