@@ -277,7 +277,7 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
 
         for (int x = 0; x < GRIDW; ++x)
         {
-            for (int y = 0; y < GRIDH/2; ++y)
+            for (int y = 0; y < LOADERH; ++y)
             {
                 if (map.CanPlaceAt(x, y))
                     poll.Vote(new pair<int, int>(x, y));
