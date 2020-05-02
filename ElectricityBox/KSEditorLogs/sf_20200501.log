@@ -15,3 +15,24 @@
 2020-05-01 13:52:29.9410 [DEBUG] Sent C:/Users/jagge/OneDrive/Desktop/QuarantineJameroo/ElectricityBox/KSEditorLogs/SessionLogs/session.123286-637239365091060511.log
 2020-05-01 14:05:00.6014 [DEBUG] Connecting
 2020-05-01 14:05:00.6144 [DEBUG] Connecting to room (123290:SceneFusion:SceneFusion) via TCP at roommanager-ec2-13-124-178-67.kinematicsoup.com:21312
+2020-05-01 14:23:50.8327 [DEBUG] Sent D:/Projects/QuarantineJameroo/ElectricityBox/KSEditorLogs/SessionLogs/session.123290-637239386815607716.log
+2020-05-01 14:24:48.0827 [DEBUG] Connecting
+2020-05-01 14:24:48.0976 [DEBUG] Connecting to room (123298:SceneFusion:SceneFusion) via TCP at roommanager-ec2-35-164-71-216.kinematicsoup.com:21312
+2020-05-01 14:24:55.4064 [DEBUG] Sent D:/Projects/QuarantineJameroo/ElectricityBox/KSEditorLogs/SessionLogs/session.123298-637239398881836351.log
+2020-05-01 14:25:16.3690 [DEBUG] Scene Fusion version 1.8.7-0
+2020-05-01 14:25:31.5250 [DEBUG] Connecting
+2020-05-01 14:25:31.5490 [DEBUG] Connecting to room (123298:SceneFusion:SceneFusion) via TCP at roommanager-ec2-35-164-71-216.kinematicsoup.com:21312
+2020-05-01 14:47:32.8104 [DEBUG] Sent D:/Projects/QuarantineJameroo/ElectricityBox/KSEditorLogs/SessionLogs/session.123298-637239399315530258.log
+2020-05-01 14:47:55.8427 [DEBUG] Connecting
+2020-05-01 14:47:55.8537 [DEBUG] Connecting to room (123300:SceneFusion:SceneFusion) via TCP at roommanager-ec2-35-164-71-216.kinematicsoup.com:21312
+2020-05-01 14:48:23.6170 [DEBUG] Sent D:/Projects/QuarantineJameroo/ElectricityBox/KSEditorLogs/SessionLogs/session.123300-637239412759406978.log
+2020-05-01 14:48:38.5631 [DEBUG] Connecting
+2020-05-01 14:48:38.5760 [DEBUG] Connecting to room (123301:SceneFusion:SceneFusion) via TCP at roommanager-ec2-35-164-71-216.kinematicsoup.com:21312
+2020-05-01 14:49:14.5745 [DEBUG] Sent D:/Projects/QuarantineJameroo/ElectricityBox/KSEditorLogs/SessionLogs/session.123301-637239413185770940.log
+2020-05-01 14:57:35.1515 [DEBUG] Scene Fusion version 1.8.7-0
+2020-05-01 14:57:57.1995 [DEBUG] Scene Fusion version 1.8.7-0
+2020-05-01 14:57:57.3655 [DEBUG] Play mode: True, sync in play mode: False
+2020-05-01 14:57:58.8863 [ERROR] NullReferenceException: Object reference not set to an instance of an object
+PackGridManager.OnDestroy () (at Assets/PackGridManager.cs:133)
+
+2020-05-01 14:57:59.4206 [DEBUG] Play mode: False
