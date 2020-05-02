@@ -19,6 +19,10 @@ public class GameManager : BehaviourSingleton<GameManager>
     public const float BIGBEATTIME = 1.0f;
     public const float BEATTIMER = BIGBEATTIME / BEATSINABIGBEAT;
 
+    public int LeftSideSceneIndex;
+    public int RightSideSceneIndex;
+    public GameObject[] DestroyAfterLoading;
+
     public int Schmunny = 0;
 
     private bool lost = false;
@@ -27,6 +31,14 @@ public class GameManager : BehaviourSingleton<GameManager>
     private readonly List<IWantsBeats> beatWanters = new List<IWantsBeats>();
 
     public event Action<int> DamageDelt;
+
+    public void Start()
+    {
+        SceneManager.LoadScene(LeftSideSceneIndex, LoadSceneMode.Additive);
+        SceneManager.LoadScene(RightSideSceneIndex, LoadSceneMode.Additive);
+        foreach (var o in DestroyAfterLoading)
+            Destroy(o);
+    }
 
     public void Register(IWantsBeats beater)
     {
@@ -41,7 +53,7 @@ public class GameManager : BehaviourSingleton<GameManager>
     {
         lost = true;
         SceneManager.LoadSceneAsync("Lose", LoadSceneMode.Additive);
-        }
+    }
 
     public void AddMoney(int amount)
     {
