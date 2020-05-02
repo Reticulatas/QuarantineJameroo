@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using DG.Tweening;
+using MoreLinq;
 using UnityEngine;
 
 public class GridObject : MonoBehaviour, IWantsBeats
@@ -13,43 +14,92 @@ public class GridObject : MonoBehaviour, IWantsBeats
     {
         JUNK,
         AMMO,
+        CIG,
 
         MAX
     }
     public Type ObjType;
     public GameObject[] EnableIfType;
 
-    public HashSet<GridObject> BoundTo = new HashSet<GridObject>();
+    private readonly List<GridObject> boundTo = new List<GridObject>();
+    public IEnumerable<GridObject> BoundedTo => boundTo;
 
     public int X;
     public int Y;
+
+    public GameObject LinePrefab;
+    private LineRenderer[] Lines;
 
     GridObject()
     {
         ID = ++IDCounter;
     }
 
-    public void MakeBoundTo(GridObject obj)
+    public void MakeBoundTo(GridObject obj, bool makeLines = true)
     {
-        obj.BoundTo.Add(this);
-        BoundTo.Add(obj);
+        if (boundTo.Contains(obj))
+            return;
+        boundTo.Add(obj);
+        obj.MakeBoundTo(this);
+        if (makeLines)
+            FormatLines();
     }
-    public void DestroyBindsTo(GridObject obj)
+    public void DestroyBindsTo(GridObject obj, bool makeLines = true)
     {
-        obj.BoundTo.Remove(this);
-        BoundTo.Remove(obj);
+        if (!boundTo.Contains(obj))
+            return;
+        boundTo.Remove(obj);
+        obj.DestroyBindsTo(this);
+        if (makeLines)
+            FormatLines();
+    }
+
+    private void FormatLines()
+    {
+        // remove
+        Lines?.ForEach(x => Destroy(x.gameObject));
+
+        // make new
+        Lines = new LineRenderer[boundTo.Count];
+        for (var index = 0; index < boundTo.Count; index++)
+        {
+            var gridObject = boundTo[index];
+            var line = Instantiate(LinePrefab, transform);
+            Lines[index] = line.GetComponent<LineRenderer>();
+        }
+    }
+    private void PositionLines()
+    {
+        // make new
+        for (var index = 0; index < boundTo.Count; index++)
+        {
+            var gridObject = boundTo[index];
+            var line = Lines[index];
+
+            var dir = (gridObject.transform.position - transform.position).normalized;
+            var lposOrigin = dir * 0.25f;
+
+            line.SetPosition(0, lposOrigin);
+            line.SetPosition(1, gridObject.transform.position - transform.position - lposOrigin);
+        }
     }
 
     public void DestroyAllBinds()
     {
-        var gridObjects = BoundTo.ToListPooled();
+        var gridObjects = boundTo.ToListPooled();
         foreach (var gridObject in gridObjects)
         {
-            DestroyBindsTo(gridObject);
+            DestroyBindsTo(gridObject, false);
         }
         gridObjects.Free();
+        FormatLines();
     }
 
+
+    public void Update()
+    {
+        PositionLines();
+    }
 
     public void Awake()
     {
@@ -90,7 +140,8 @@ public class GridObject : MonoBehaviour, IWantsBeats
 
     public void OnBeat()
     {
-        StartMoveToIntended();
+        if (!IsDying)
+            StartMoveToIntended();
     }
     public void OnBigBeat()
     {
@@ -101,6 +152,8 @@ public class GridObject : MonoBehaviour, IWantsBeats
         if (IsDying)
             return;
         IsDying = true;
+        
+        moveTween?.Kill();
 
         GameManager.obj.UnRegister(this);
 
@@ -117,6 +170,8 @@ public class GridObject : MonoBehaviour, IWantsBeats
         if (IsDying)
             return;
         IsDying = true;
+
+        moveTween?.Kill();
 
         GameManager.obj.UnRegister(this);
 

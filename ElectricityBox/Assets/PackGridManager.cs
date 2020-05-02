@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.Analytics;
 using Util;
@@ -15,6 +16,7 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
 
     public GameObject BlockPrefab;
     public Transform BlockSpawnLocation;
+    public Transform Root;
 
     private int blockSpawnTimer = 0;
     private TileMap.Dir? queuedDirMove = null; 
@@ -57,7 +59,7 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
 
                 yield return gridObject;
 
-                foreach (var bound in gridObject.BoundTo)
+                foreach (var bound in gridObject.BoundedTo)
                 {
                     objs.Add(bound);
                 }
@@ -86,8 +88,8 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
             return objects.Find(t => t.X == x && t.Y == y);
         }
 
-        public enum Dir { NORTH, SOUTH, EAST, WEST }
-        private void TransformPointDir(Dir dir, int x, int y, out int nx, out int ny)
+        public enum Dir { NORTH, SOUTH, EAST, WEST, MAX }
+        public void TransformPointDir(Dir dir, int x, int y, out int nx, out int ny)
         {
             int rx = x;
             int ry = y;
@@ -114,7 +116,7 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
         {
             // find one over point this tile can go
 
-            var toCheck = tile.BoundTo.ToListPooled();
+            var toCheck = tile.BoundedTo.ToListPooled();
             toCheck.Add(tile);
 
             bool canMove = true;
@@ -197,6 +199,17 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
             return true;
         }
 
+        public bool CanPlaceAt(int x, int y)
+        {
+            if (OutOfBounds(x, y))
+                return false;
+            if (SomethingAt(x, y))
+                return false;
+            if (ObjectAt(x, y) != null)
+                return false;
+            return true;
+        }
+
         public bool RemoveObjectAt(int x, int y)
         {
             var obj = ObjectAt(x, y);
@@ -253,8 +266,8 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
     }
 
     private int spawned = 0;
-    private const int EVERYXISAMMO = 5;
-    public void SpawnNewGridObject()
+    private const int EVERYXISAMMO = 10;
+    public bool SpawnNewGridObject()
     {
         var poll = new SimplePoll<pair<int, int>>();
 
@@ -262,31 +275,53 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
         {
             for (int y = 0; y < GRIDH/2; ++y)
             {
-                if (!map.SomethingAt(x, y) && map.ObjectAt(x, y) == null)
+                if (map.CanPlaceAt(x, y))
                     poll.Vote(new pair<int, int>(x, y));
             }
         }
 
         // no possible
         if (poll.Votes.Count == 0)
-            return;
+            return false;
+
+        GridObject MakeObjectAt(int x, int y)
+        {
+            ++spawned;
+
+            var newBlock = Instantiate(BlockPrefab, transform);
+            newBlock.transform.localPosition = BlockSpawnLocation.localPosition;
+            var gridObject = newBlock.GetComponent<GridObject>();
+
+            // assign type
+            var typePoll = new WeightedPoll<GridObject.Type>();
+            typePoll.Vote(GridObject.Type.AMMO, spawned % EVERYXISAMMO == 0 ? 100 : 1);
+            typePoll.Vote(GridObject.Type.JUNK, 6);
+            typePoll.Vote(GridObject.Type.CIG, 3);
+            gridObject.ObjType = typePoll.WeightedRandomResult;
+
+            map.SetObjectAt(gridObject, x, y);
+            gridObject.StartMoveToIntended();
+
+            return gridObject;
+        }
 
         var point = poll.Result;
+        var block1 = MakeObjectAt(point.First, point.Second);
 
-        ++spawned;
+        if (block1.ObjType == GridObject.Type.JUNK)
+        {
+            // make a second one if we can
+            TileMap.Dir dir = (TileMap.Dir) Random.Range(0, (int) TileMap.Dir.MAX);
+            int nx, ny;
+            map.TransformPointDir(dir, point.First, point.Second, out nx, out ny);
+            if (map.CanPlaceAt(nx, ny))
+            {
+                var block2 = MakeObjectAt(nx, ny);
+                block2.MakeBoundTo(block1);
+            }
+        }
 
-        var newBlock = Instantiate(BlockPrefab, transform);
-        newBlock.transform.localPosition = BlockSpawnLocation.localPosition;
-        var gridObject = newBlock.GetComponent<GridObject>();
-
-        // assign type
-        GridObject.Type type = (GridObject.Type) Random.Range(0, (int) GridObject.Type.MAX);
-        if (spawned % EVERYXISAMMO == 0)
-            type = GridObject.Type.AMMO;
-        gridObject.ObjType = type;
-
-        map.SetObjectAt(gridObject, point.First, point.Second);
-        gridObject.StartMoveToIntended();
+        return true;
     }
 
     private void MapBeat()
@@ -306,12 +341,18 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
                     block.BeginFiring();
                 }
             }
-            else if (block.ObjType == GridObject.Type.JUNK)
+            else if (block.ObjType == GridObject.Type.JUNK || block.ObjType == GridObject.Type.CIG)
             {
                 List<GridObject> objsToRemove = ListPool<GridObject>.New();
-                map.FloodCollect(block.X, block.Y, ref objsToRemove, obj => obj.ObjType == GridObject.Type.JUNK);
+                map.FloodCollect(block.X, block.Y, ref objsToRemove, obj => obj.ObjType == block.ObjType);
                 if (objsToRemove.Count >= MINTODESTROYJUNK)
                 {
+                    if (block.ObjType == GridObject.Type.CIG)
+                    {
+                        // give money for cigs
+                        GameManager.obj.AddMoney(objsToRemove.Count * 5);
+                    }
+
                     foreach (var gridObject in objsToRemove)
                     {
                         if (map.RemoveObjectAt(gridObject.X, gridObject.Y))
@@ -326,6 +367,23 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
         // slide
         if (queuedDirMove.HasValue)
         {
+            float punch = 5;
+            switch (queuedDirMove.Value)
+            {
+                case TileMap.Dir.NORTH:
+                    Root.DOPunchRotation(new Vector3(punch*3, 0, 0), 0.166f);
+                    break;
+                case TileMap.Dir.SOUTH:
+                    Root.DOPunchRotation(new Vector3(-punch*3, 0, 0), 0.166f);
+                    break;
+                case TileMap.Dir.EAST:
+                    Root.DOPunchRotation(new Vector3(0, 0, -punch), 0.166f);
+                    break;
+                case TileMap.Dir.WEST:
+                    Root.DOPunchRotation(new Vector3(0, 0, punch), 0.166f);
+                    break;
+            }
+
             bool somethingSlid = true;
             do
             {
@@ -354,6 +412,9 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
 
     void Update()
     {
+        if (GameManager.obj.Lost)
+            return;
+
         if (Input.GetKeyDown(KeyCode.F1))
         {
             map.DebugLog();
@@ -387,7 +448,10 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
         ++blockSpawnTimer;
         if (blockSpawnTimer % 2 == 0)
         {
-            SpawnNewGridObject();
+            if (!SpawnNewGridObject())
+            {
+                GameManager.obj.Lose();
+            }
         }
     }
 }

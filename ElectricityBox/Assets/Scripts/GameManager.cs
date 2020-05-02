@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public interface IWantsBeats
 {
@@ -14,9 +15,14 @@ public class GameManager : BehaviourSingleton<GameManager>
     private float gameTime;
     private ulong beats;
 
-    public const int BEATSINABIGBEAT = 4;
-    public const float BIGBEATTIME = 1.8f;
+    public const int BEATSINABIGBEAT = 8;
+    public const float BIGBEATTIME = 1.0f;
     public const float BEATTIMER = BIGBEATTIME / BEATSINABIGBEAT;
+
+    public int Schmunny = 0;
+
+    private bool lost = false;
+    public bool Lost => lost;
 
     private readonly List<IWantsBeats> beatWanters = new List<IWantsBeats>();
 
@@ -29,8 +35,28 @@ public class GameManager : BehaviourSingleton<GameManager>
         beatWanters.Remove(beater);
     }
 
+    public void Lose()
+    {
+        lost = true;
+        SceneManager.LoadSceneAsync("Lose", LoadSceneMode.Additive);
+    }
+
+    public void AddMoney(int amount)
+    {
+        Schmunny += amount;
+        Debug.Log("Schmunny: " + Schmunny);
+    }
+
     public void Update()
     {
+        if (lost)
+            return;
+
+        if (Input.GetKeyDown(KeyCode.F2))
+        {
+            Lose();
+        }
+
         gameTime += Time.deltaTime;
 
         if (gameTime > BEATTIMER)
