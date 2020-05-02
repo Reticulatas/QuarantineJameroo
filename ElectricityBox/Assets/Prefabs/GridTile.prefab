@@ -74,7 +74,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
-  m_Sprite: {fileID: 21300000, guid: 0517a596c397fd648b659b54e2290016, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 3c0db831d4369d8478fb8a34a3dfcb5d, type: 3}
   m_Color: {r: 0.2794118, g: 0.2794118, b: 0.2794118, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -121,7 +121,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8656549247552637026
 Transform:
   m_ObjectHideFlags: 0
@@ -208,7 +208,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 0517a596c397fd648b659b54e2290016, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 098472763fd4c064eb7efc373effc3ec, type: 3}
   m_Color: {r: 0.8088235, g: 0.76124567, b: 0.6898789, a: 1}
   m_FlipX: 0
   m_FlipY: 0
@@ -234,7 +234,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &8378686477789947733
 Transform:
   m_ObjectHideFlags: 0
@@ -266,7 +266,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &3449547612085498952
 Transform:
   m_ObjectHideFlags: 0
@@ -434,8 +434,8 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 0517a596c397fd648b659b54e2290016, type: 3}
-  m_Color: {r: 0.8014706, g: 0.30055147, b: 0.30055147, a: 1}
+  m_Sprite: {fileID: 21300000, guid: 098472763fd4c064eb7efc373effc3ec, type: 3}
+  m_Color: {r: 1, g: 0, b: 0, a: 1}
   m_FlipX: 0
   m_FlipY: 0
   m_DrawMode: 0
@@ -596,7 +596,7 @@ SpriteRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 1
-  m_Sprite: {fileID: 21300000, guid: 0517a596c397fd648b659b54e2290016, type: 3}
+  m_Sprite: {fileID: 21300000, guid: 098472763fd4c064eb7efc373effc3ec, type: 3}
   m_Color: {r: 0.80784315, g: 0.76565844, b: 0.461, a: 1}
   m_FlipX: 0
   m_FlipY: 0

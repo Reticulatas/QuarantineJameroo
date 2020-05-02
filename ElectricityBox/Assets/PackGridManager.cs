@@ -330,6 +330,7 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
 
     private void MapBeat()
     {
+        int clearedDuringLoad = 0;
         if (shouldClearLoaded)
         {
             ShutterAnimator.SetTrigger("Open");
@@ -350,6 +351,7 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
                     {
                         map.RemoveObjectAt(block.X, block.Y);
                         block.BeginFiring();
+                        ++clearedDuringLoad;
                     }
                 }
             }
@@ -404,12 +406,16 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
                 foreach (var unqBlock in map.IterateUniqueBlocks())
                 {
                     anythingSlid |= map.SlideTile(unqBlock, queuedDirMove.Value);
-
                 }
                 somethingSlid = anythingSlid;
             } while (somethingSlid);
 
             queuedDirMove = null;
+        }
+
+        if (clearedDuringLoad > 0)
+        {
+            GameManager.obj.DealDamage(clearedDuringLoad);
         }
 
         shouldClearLoaded = false;

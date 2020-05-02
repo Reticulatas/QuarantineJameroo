@@ -26,6 +26,8 @@ public class GameManager : BehaviourSingleton<GameManager>
 
     private readonly List<IWantsBeats> beatWanters = new List<IWantsBeats>();
 
+    public event Action<int> DamageDelt;
+
     public void Register(IWantsBeats beater)
     {
         beatWanters.Add(beater);
@@ -45,6 +47,11 @@ public class GameManager : BehaviourSingleton<GameManager>
     {
         Schmunny += amount;
         Debug.Log("Schmunny: " + Schmunny);
+    }
+
+    public void DealDamage(int amount)
+    {
+        DamageDelt?.Invoke(amount);
     }
 
     public void Update()
