@@ -176,8 +176,8 @@ public class GridObject : MonoBehaviour, IWantsBeats
         GameManager.obj.UnRegister(this);
 
         var seq = DOTween.Sequence();
-        seq.Append(transform.DOPunchScale(Vector3.one * 0.5f, 0.333f, 2, 0.1f));
-        seq.Append(transform.DOLocalMoveY(-20, 0.5f).SetEase(Ease.InBack));
+        seq.Append(transform.DOScale(new Vector3(0.9f, 0.9f, 0.9f), 0.1666f));
+        seq.AppendInterval(GameManager.BEATTIMER + 0.333f);
         seq.AppendCallback(() => { Destroy(gameObject); });
         seq.Play();
     }

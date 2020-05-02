@@ -19,7 +19,11 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
     public Transform Root;
 
     private int blockSpawnTimer = 0;
-    private TileMap.Dir? queuedDirMove = null; 
+    private TileMap.Dir? queuedDirMove = null;
+
+    public Animator ShutterAnimator;
+
+    private bool shouldClearLoaded = false;
 
     private class TileMap
     {
@@ -326,6 +330,11 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
 
     private void MapBeat()
     {
+        if (shouldClearLoaded)
+        {
+            ShutterAnimator.SetTrigger("Open");
+        }
+
         // remove those needing to be removed
         var blocks = map.IterateAllBlocks().ToListPooled();
         foreach (var block in blocks)
@@ -335,10 +344,13 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
             
             if (block.ObjType == GridObject.Type.AMMO)
             {
-                if (block.Y >= LOADERH)
+                if (shouldClearLoaded)
                 {
-                    map.RemoveObjectAt(block.X, block.Y);
-                    block.BeginFiring();
+                    if (block.Y >= LOADERH)
+                    {
+                        map.RemoveObjectAt(block.X, block.Y);
+                        block.BeginFiring();
+                    }
                 }
             }
             else if (block.ObjType == GridObject.Type.JUNK || block.ObjType == GridObject.Type.CIG)
@@ -368,6 +380,7 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
         if (queuedDirMove.HasValue)
         {
             float punch = 5;
+            Root.DOComplete();
             switch (queuedDirMove.Value)
             {
                 case TileMap.Dir.NORTH:
@@ -398,6 +411,8 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
 
             queuedDirMove = null;
         }
+
+        shouldClearLoaded = false;
     }
 
     void Start()
@@ -435,6 +450,11 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
         else if (Input.GetKeyDown(KeyCode.DownArrow))
         {
             queuedDirMove = TileMap.Dir.SOUTH;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Return))
+        {
+            shouldClearLoaded = true;
         }
     }
 
