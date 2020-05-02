@@ -7,16 +7,16 @@ using UnityEngine.UIElements;
 public class ObjectGenerator : MonoBehaviour
 {
     [SerializeField] 
-    private GameObject[] objects;
+    private GameObject[] objects = null;
 
     [SerializeField] private float spawnInterval = 0.1f;
 
-    [SerializeField] private Vector3 spawnMinPos;
-    [SerializeField] private Vector3 spawnMaxPos;
-    [SerializeField] private int spawnMinRotationSpeed;
-    [SerializeField] private int spawnMaxRotationSpeed;
-    [SerializeField] private float spawnMinMoveSpeed;
-    [SerializeField] private float spawnMaxMoveSpeed;
+    [SerializeField] private Vector3 spawnMinPos = Vector3.zero;
+    [SerializeField] private Vector3 spawnMaxPos = Vector3.zero;
+    [SerializeField] private int spawnMinRotationSpeed = 0;
+    [SerializeField] private int spawnMaxRotationSpeed = 0;
+    [SerializeField] private float spawnMinMoveSpeed = 0.0f;
+    [SerializeField] private float spawnMaxMoveSpeed = 0.0f;
     [SerializeField] private float spawnMinSize = 1.0f;
     [SerializeField] private float spawnMaxSize = 1.0f;
     
