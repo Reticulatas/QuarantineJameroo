@@ -134,7 +134,7 @@ public class GridObject : MonoBehaviour, IWantsBeats
         var intendedWorldPos = GetIntendedWorldPos();
         if (Vector3.Distance(transform.position, intendedWorldPos) > float.Epsilon)
         {
-            moveTween = transform.DOLocalMove(intendedWorldPos, GameManager.BEATTIMER * 0.5f).SetEase(Ease.InBack);
+            moveTween = transform.DOLocalMove(intendedWorldPos, GameManager.BEATTIMER * .9f).SetEase(Ease.InCubic);
         }
     }
 

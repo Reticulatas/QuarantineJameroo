@@ -39,7 +39,7 @@ public class GameManager : BehaviourSingleton<GameManager>
     {
         lost = true;
         SceneManager.LoadSceneAsync("Lose", LoadSceneMode.Additive);
-    }
+        }
 
     public void AddMoney(int amount)
     {
