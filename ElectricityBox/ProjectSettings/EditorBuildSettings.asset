@@ -18,7 +18,7 @@ EditorBuildSettings:
     path: Assets/Scenes/rightside.unity
     guid: 78a71a1c514755148a276d5d654c7db3
   - enabled: 1
-    path: Assets/LeftSide.unity
+    path: Assets/Scenes/LeftSide.unity
     guid: 7d99a31fab26a8049b8b0e73ba3cf0d8
   - enabled: 1
     path: Assets/Scenes/lose.unity

@@ -11,5 +11,7 @@ public class ForceSetToMainCamera : MonoBehaviour
     {
         canvas.worldCamera = Camera.main;
         ;
+
+        canvas.planeDistance = 1;
     }
 }
