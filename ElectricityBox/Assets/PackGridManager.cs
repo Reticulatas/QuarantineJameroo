@@ -225,10 +225,25 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
             if (obj == null)
                 return false;
 
-            obj.DestroyAllBinds();
             objects.Remove(obj);
             obj.X = -1;
             obj.Y = -1;
+
+            if (GameManager.obj.UnlockedUpgrades.HasFlag(GameManager.Upgrade.EXPLOSIVE))
+            {
+                var boundObjs = obj.BoundedTo.ToListPooled();
+                foreach (var gridObject in boundObjs)
+                {
+                    if (gridObject != null)
+                    {
+                        if (RemoveObjectAt(gridObject.X, gridObject.Y))
+                            gridObject.BeginConsume();
+                    }
+                }
+                boundObjs.Free();
+            }
+
+            obj.DestroyAllBinds();
             return true;
         }
 
@@ -379,10 +394,18 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
                 map.FloodCollect(block.X, block.Y, ref objsToRemove, obj => obj.ObjType == block.ObjType);
                 if (objsToRemove.Count >= MINTODESTROYJUNK)
                 {
+                    bool hasStatic = GameManager.obj.UnlockedUpgrades.HasFlag(GameManager.Upgrade.STATIC);
                     if (block.ObjType == GridObject.Type.CIG)
                     {
-                        // give money for cigs
-                        GameManager.obj.AddMoney(objsToRemove.Count * 5);
+                        // give money for cigs (or junk if upgrade done)
+                        if (hasStatic)
+                            GameManager.obj.AddMoney(-objsToRemove.Count * 2);
+                        else
+                            GameManager.obj.AddMoney(objsToRemove.Count * 5);
+                    }
+                    if (block.ObjType == GridObject.Type.JUNK && hasStatic)
+                    {
+                        GameManager.obj.AddMoney(objsToRemove.Count * 4);
                     }
 
                     foreach (var gridObject in objsToRemove)
@@ -433,7 +456,10 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
 
         if (clearedDuringLoad > 0)
         {
-            GameManager.obj.DealDamage(clearedDuringLoad);
+            if (clearedDuringLoad >= 6 && GameManager.obj.UnlockedUpgrades.HasFlag(GameManager.Upgrade.MOAR))
+                GameManager.obj.DealDamage(999);
+            else
+                GameManager.obj.DealDamage(clearedDuringLoad);
         }
 
         shouldClearLoaded = false;

@@ -1,7 +1,9 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using UnityEngine.Rendering.HighDefinition;
 
 public class DisplaySchmunny : MonoBehaviour
 {
@@ -20,6 +22,8 @@ public class DisplaySchmunny : MonoBehaviour
     void Update()
     {
         storedSchmunny = Mathf.MoveTowards(storedSchmunny, (float)gameManager.Schmunny + 0.5f, 1.0f);
-        text.SetText($"${Mathf.Floor(storedSchmunny).ToString()}");
+        int nextUpgrade = gameManager.GetMoneyForNextUpgrade() - Mathf.FloorToInt(storedSchmunny);
+
+        text.SetText($"${Mathf.FloorToInt(storedSchmunny)}{Environment.NewLine}<size=45%><smallcaps>upgrade in ${nextUpgrade}</smallcaps></size>");
     }
 }
