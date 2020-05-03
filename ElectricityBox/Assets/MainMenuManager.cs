@@ -8,6 +8,7 @@ public class MainMenuManager : MonoBehaviour
 {
     public Animator Animator;
     public int MainSceneIndex;
+    public int TutorialSceneIndex;
     public GameObject SettingsMenu;
 
     public Slider volumeSlider;
@@ -30,18 +31,23 @@ public class MainMenuManager : MonoBehaviour
         Screen.fullScreen = !Screen.fullScreen;
     }
 
+    private static bool hasVisitedTutorialScene = false;
     void Update()
     {
         if (starting)
         {
             if (Animator.GetCurrentAnimatorStateInfo(0).IsName("DONE"))
             {
-                SceneManager.LoadScene(MainSceneIndex);
+                if (!hasVisitedTutorialScene)
+                    SceneManager.LoadScene(TutorialSceneIndex);
+                else
+                    SceneManager.LoadScene(MainSceneIndex);
+                hasVisitedTutorialScene = true;
             }
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             Animator.SetTrigger("Start");
             starting = true;
