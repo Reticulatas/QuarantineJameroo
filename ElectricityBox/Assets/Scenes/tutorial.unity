@@ -732,7 +732,7 @@ MonoBehaviour:
   m_text: 'Press <color=orange><b>ENTER</b></color> to load ammo
 
     <size=50%>MORE
-    AMMO = MORE DAMAGE</size>
+    AMMO = <color=red>COMBO</color> DAMAGE</size>
 
 '
   m_isRightToLeft: 0
@@ -804,7 +804,7 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 796891503}
-    characterCount: 49
+    characterCount: 50
     spriteCount: 0
     spaceCount: 10
     wordCount: 9

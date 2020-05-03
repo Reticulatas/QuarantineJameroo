@@ -134,7 +134,7 @@ public class GridObject : MonoBehaviour, IWantsBeats
         var intendedWorldPos = GetIntendedWorldPos();
         if (Vector3.Distance(transform.position, intendedWorldPos) > float.Epsilon)
         {
-            moveTween = transform.DOLocalMove(intendedWorldPos, GameManager.BEATTIMER * .9f).SetEase(ease);
+            moveTween = transform.DOLocalMove(intendedWorldPos, GameManager.obj.BEATTIMER * .9f).SetEase(ease);
         }
     }
 
@@ -177,7 +177,7 @@ public class GridObject : MonoBehaviour, IWantsBeats
 
         var seq = DOTween.Sequence();
         seq.Append(transform.DOScale(new Vector3(0.9f, 0.9f, 0.9f), 0.1666f));
-        seq.AppendInterval(GameManager.BEATTIMER + 0.333f);
+        seq.AppendInterval(GameManager.obj.BEATTIMER + 0.333f);
         seq.AppendCallback(() => { Destroy(gameObject); });
         seq.Play();
     }

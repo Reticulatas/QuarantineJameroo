@@ -13,11 +13,11 @@ public interface IWantsBeats
 public class GameManager : BehaviourSingleton<GameManager>
 {
     private float gameTime;
-    private ulong beats;
+    private uint beats;
 
-    public const int BEATSINABIGBEAT = 8;
-    public static float BIGBEATTIME = 1.0f;
-    public static float BEATTIMER
+    public uint BEATSINABIGBEAT = 7;
+    public float BIGBEATTIME = 0.8f;
+    public float BEATTIMER
     {
         get { return BIGBEATTIME / BEATSINABIGBEAT; }
     }
@@ -27,6 +27,9 @@ public class GameManager : BehaviourSingleton<GameManager>
     public GameObject[] DestroyAfterLoading;
 
     public int Schmunny = 0;
+
+    public int paybacks = 0;
+    public TMPro.TextMeshProUGUI PaybacksText;
 
     private bool lost = false;
     public bool Lost => lost;
@@ -84,16 +87,30 @@ public class GameManager : BehaviourSingleton<GameManager>
         }
     }
 
+    public void SpeedUpMajor()
+    {
+        BIGBEATTIME *= 0.6f;
+        ++upgrades;
+    }
     public void SpeedUp()
     {
         BIGBEATTIME *= 0.8f;
-        ++upgrades;
     }
 
     public int GetMoneyForNextUpgrade()
     {
         const int MoneyForUpgrade = 25;
-        return MoneyForUpgrade * (upgrades + 2);
+        switch (upgrades)
+        {
+            case 0:
+                return 50;
+            case 1:
+                return 150;
+            case 2:
+                return 500;
+            default:
+                return 999;
+        }
     }
 
     public void DealDamage(int amount)
@@ -119,6 +136,13 @@ public class GameManager : BehaviourSingleton<GameManager>
         ++upgrades;
     }
 
+    public void OnEnemyKilled()
+    {
+        SpeedUp();
+        ++paybacks;
+        PaybacksText.text = $"<size=200%><color=orange>{paybacks}</color></size> paybacks";
+    }
+
     public void Update()
     {
         if (lost || shopping)
@@ -139,7 +163,7 @@ public class GameManager : BehaviourSingleton<GameManager>
 
         if (gameTime > BEATTIMER)
         {
-            gameTime = gameTime - BEATTIMER;
+            gameTime = 0;
             ++beats;
 
             if (beats % BEATSINABIGBEAT == 0)
