@@ -9,7 +9,7 @@ using Random = UnityEngine.Random;
 public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
 {
     public int NextEnemyHealth;
-    
+
     [SerializeField] private GameObject[] enemies;
     [SerializeField] private Vector3 spawnPosition;
     [SerializeField] public float TimeToEnter;
@@ -37,17 +37,17 @@ public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
     [SerializeField] private float missileTravelTime;
     [SerializeField] private float missileOutwardRatio;
     [SerializeField] private float missileOutwardDistance;
-    
+
     private int bigBeatCounter = 0;
 
     public event Action<GameObject> EnemySpawned;
     public event Action EnemyDestroyed;
-    
+
     private Enemy CurrentEnemy;
     private TMP_Text healthText;
     private RectTransform healthTextTransform;
-    
-    
+
+
     private class Enemy
     {
         public Enemy(GameObject _obj, int _maxHealth)
@@ -55,7 +55,7 @@ public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
             obj = _obj;
             transform = _obj.transform;
             health = _maxHealth;
-            displayedHealth = (float)_maxHealth;
+            displayedHealth = (float) _maxHealth;
             maxHealth = _maxHealth;
         }
 
@@ -75,7 +75,7 @@ public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
         public float displayedHealth;
         public int maxHealth;
     }
-    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -90,19 +90,25 @@ public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
     {
         base.Awake();
     }
-    
+
 
     // Update is called once per frame
     void Update()
     {
         UpdateHealthText();
-        
-        if (Input.GetKeyDown(KeyCode.Keypad1))
+
+        if (Input.GetKeyDown(KeyCode.Alpha1))
             ObjOnDamageDelt(1);
-        if (Input.GetKeyDown(KeyCode.Keypad2))
+        if (Input.GetKeyDown(KeyCode.Alpha2))
             ObjOnDamageDelt(2);
-        if (Input.GetKeyDown(KeyCode.Keypad3))
+        if (Input.GetKeyDown(KeyCode.Alpha3))
             ObjOnDamageDelt(3);
+        if (Input.GetKeyDown(KeyCode.Alpha4))
+            ObjOnDamageDelt(4);
+        if (Input.GetKeyDown(KeyCode.Alpha5))
+            ObjOnDamageDelt(5);
+        if (Input.GetKeyDown(KeyCode.Alpha6))
+            ObjOnDamageDelt(6);
         if (Input.GetKeyDown(KeyCode.F7))
             DestroyEnemy();
     }
@@ -130,17 +136,17 @@ public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
 
         float displayedHealth = CurrentEnemy.displayedHealth;
         int health = CurrentEnemy.health;
-        displayedHealth = (Mathf.MoveTowards(displayedHealth, (float)health + 0.5f, 1.0f));
+        displayedHealth = (Mathf.MoveTowards(displayedHealth, (float) health + 0.5f, 1.0f));
         CurrentEnemy.SetDisplayedHealth(displayedHealth);
-        
+
         healthText.SetText($"{Mathf.Floor(displayedHealth).ToString()}");
         healthTextTransform.anchoredPosition3D = CurrentEnemy.transform.position + textOffset;
     }
-    
+
     private void ObjOnDamageDelt(int damage)
     {
         if (CurrentEnemy == null) return;
-        
+
         LaunchMissile(damage);
         StartCoroutine(Co_DealDamage(damage));
     }
@@ -182,7 +188,8 @@ public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
         var missile = missileObj.GetComponent<Missile>();
         missile.EnemyTransform = CurrentEnemy.transform;
         missile.OutwardTravelTime = missileOutwardRatio * missileTravelTime;
-        missile.OutwardVector = Vector3.Normalize(topLauncher.position - baseLauncher.position) * missileOutwardDistance;
+        missile.OutwardVector =
+            Vector3.Normalize(launcher.position - baseLauncher.position) * missileOutwardDistance;
         missile.TotalTravelTime = missileTravelTime;
         missile.LauncherTransform = launcher;
 
@@ -196,15 +203,16 @@ public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
     {
         var waitForSeconds = new WaitForSeconds(missileTravelTime);
         yield return waitForSeconds;
-        
+
         if (CurrentEnemy == null) yield break;
 
         CurrentEnemy.SetHealth(CurrentEnemy.health - damage);
-        
+
         if (CurrentEnemy.health <= 0)
         {
             NextEnemyHealth = Mathf.FloorToInt(NextEnemyHealth * 1.75f);
             DestroyEnemy();
+        }
     }
 
 
@@ -212,7 +220,7 @@ public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
     {
         int i = Random.Range(0, enemies.Length);
 
-        
+
         var newEnemy = Instantiate(enemies[i], gameObject.transform);
         var enemyScript = newEnemy.GetComponent<EnemyScript>();
         enemyScript.TargetPosition = spawnPosition;
@@ -232,19 +240,19 @@ public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
 
     public void OnBeat()
     {
-        
+
     }
 
     public void OnBigBeat()
     {
         if (CurrentEnemy != null) return;
-        
+
         ++bigBeatCounter;
         if (bigBeatCounter >= bigBeatsToSpawnEnemy)
         {
             GenerateEnemy(NextEnemyHealth);
             bigBeatCounter = 0;
         }
-
     }
 }
+
