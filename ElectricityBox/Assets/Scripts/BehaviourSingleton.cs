@@ -13,4 +13,9 @@ public class BehaviourSingleton<T> : MonoBehaviour where T : class {
 	        Debug.LogError("Assigning singleton twice: " + typeof (T).Name);
         _obj = this;
 	}
+
+    public virtual void OnDestroy()
+    {
+        _obj = null;
+    }
 }
