@@ -42,15 +42,28 @@
     {
         UNITY_SETUP_STEREO_EYE_INDEX_POST_VERTEX(input);
 
-        float aspect = _ScreenSize.y / (float)_ScreenSize.x;
-        float dx = _Intensity * (1.0 / _ScreenSize.x);
-        float dy = _Intensity * (1.0 / _ScreenSize.y) * aspect;
-        
-        float2 newTexCoord = { dx * floor(input.texcoord.x / dx), dy * floor(input.texcoord.y / dy) };
-        float2 positionSS = newTexCoord * _ScreenSize.xy;
-        float3 outColor = LOAD_TEXTURE2D_X(_InputTexture, positionSS).xyz;
+		float depth = LoadCameraDepth(input.positionCS.xy);	
+		depth = Linear01Depth(depth, _ZBufferParams);
 
-        return float4(outColor, 1);
+		float3 outColor;
+
+		if (depth > 0.05f)
+		{
+			float aspect = _ScreenSize.y / (float)_ScreenSize.x;
+			float dx = _Intensity * (1.0 / _ScreenSize.x);
+			float dy = _Intensity * (1.0 / _ScreenSize.y) * aspect;
+
+			float2 newTexCoord = { dx * floor(input.texcoord.x / dx), dy * floor(input.texcoord.y / dy) };
+			float2 positionSS = newTexCoord * _ScreenSize.xy;
+			outColor = LOAD_TEXTURE2D_X(_InputTexture, positionSS).xyz;
+		}
+		else
+		{
+			outColor = LOAD_TEXTURE2D_X(_InputTexture, input.positionCS.xy).xyz;
+		}
+
+		//outColor = float4(depth, depth, depth, 1);
+		return float4(outColor, 1);
     }
 
     ENDHLSL
