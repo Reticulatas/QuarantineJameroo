@@ -112,6 +112,7 @@ public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
         CurrentEnemy = null;
         EnemyDestroyed.Invoke();
         GameManager.obj.OnEnemyKilled();
+        PackGridManager.obj.RemoveAll(GridObject.Type.JUNK);
     }
 
     void UpdateHealthText()

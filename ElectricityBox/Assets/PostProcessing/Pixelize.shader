@@ -47,7 +47,7 @@
 
 		float3 outColor;
 
-		if (depth > 0.05f)
+		if (depth > 0.03f)
 		{
 			float aspect = _ScreenSize.y / (float)_ScreenSize.x;
 			float dx = _Intensity * (1.0 / _ScreenSize.x);

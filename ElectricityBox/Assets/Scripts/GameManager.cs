@@ -15,8 +15,8 @@ public class GameManager : BehaviourSingleton<GameManager>
     private float gameTime;
     private uint beats;
 
-    public uint BEATSINABIGBEAT = 7;
-    public float BIGBEATTIME = 0.8f;
+    public uint BEATSINABIGBEAT = 8;
+    public float BIGBEATTIME = 1.0f;
     public float BEATTIMER
     {
         get { return BIGBEATTIME / BEATSINABIGBEAT; }
@@ -94,7 +94,7 @@ public class GameManager : BehaviourSingleton<GameManager>
     }
     public void SpeedUp()
     {
-        BIGBEATTIME *= 0.8f;
+        BIGBEATTIME -= 0.05f;
     }
 
     public int GetMoneyForNextUpgrade()

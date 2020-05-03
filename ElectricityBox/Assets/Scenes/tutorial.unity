@@ -1971,10 +1971,10 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: '<color=red>ENEMIES</color> will add junk to your backpack
+  m_text: '<color=red>ENEMIES</color> will add <color=#BABAFAFA>STATIC</color> to
+    your backpack
 
-    <b>MATCH
-    3+ junk to remove it</b>'
+    <b>kill an enemy to clear all static</b>'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0db01cbd0ceae5f41a8e56bb55b1ef55, type: 2}
   m_sharedMaterial: {fileID: -4735568389893339754, guid: 0db01cbd0ceae5f41a8e56bb55b1ef55,
@@ -2020,7 +2020,7 @@ MonoBehaviour:
   m_enableWordWrapping: 1
   m_wordWrappingRatios: 0.4
   m_overflowMode: 0
-  m_firstOverflowCharacterIndex: 39
+  m_firstOverflowCharacterIndex: 41
   m_linkedTextComponent: {fileID: 0}
   m_isLinkedTextComponent: 0
   m_isTextTruncated: 0
@@ -2044,10 +2044,10 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1612319565}
-    characterCount: 65
+    characterCount: 74
     spriteCount: 0
-    spaceCount: 12
-    wordCount: 13
+    spaceCount: 13
+    wordCount: 14
     linkCount: 0
     lineCount: 2
     pageCount: 1
