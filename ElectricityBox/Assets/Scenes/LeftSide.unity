@@ -206,7 +206,7 @@ PrefabInstance:
     - target: {fileID: 8278234847848481684, guid: d210b0383eccf03479a4e839b33dc3a6,
         type: 3}
       propertyPath: NextEnemyHealth
-      value: 5
+      value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 8278234847848481684, guid: d210b0383eccf03479a4e839b33dc3a6,
         type: 3}

@@ -70,7 +70,6 @@ public class GameManager : BehaviourSingleton<GameManager>
         SceneManager.LoadSceneAsync("Lose", LoadSceneMode.Additive);
     }
 
-    private const int MoneyForUpgrade = 30;
     private int upgrades = 0;
     public void AddMoney(int amount)
     {
@@ -93,7 +92,8 @@ public class GameManager : BehaviourSingleton<GameManager>
 
     public int GetMoneyForNextUpgrade()
     {
-        return MoneyForUpgrade * (upgrades + 1);
+        const int MoneyForUpgrade = 25;
+        return MoneyForUpgrade * (upgrades + 2);
     }
 
     public void DealDamage(int amount)
