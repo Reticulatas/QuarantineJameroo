@@ -50,6 +50,7 @@ public class MainMenuManager : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space))
         {
             Animator.SetTrigger("Start");
+            this.GetComponent<AudioSource>().Play();
             starting = true;
         }
 

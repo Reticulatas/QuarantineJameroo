@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Net;
 using System.Text;
 using DG.Tweening;
@@ -8,7 +9,7 @@ using UnityEngine.Analytics;
 using Util;
 using Random = UnityEngine.Random;
 
-public class PackGridManager : MonoBehaviour , IWantsBeats
+public class PackGridManager : BehaviourSingleton<PackGridManager>, IWantsBeats
 {
     public const int GRIDW = 4;
     public const int GRIDH = 10;
@@ -21,7 +22,6 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
     public GameObject RopesTutorialText;
 
     private bool firstRope = true;
-    private int dontSpawnRopeForX = 6;
 
     private int blockSpawnTimer = 0;
     private TileMap.Dir? queuedDirMove = null;
@@ -29,6 +29,13 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
     public Animator ShutterAnimator;
 
     private bool shouldClearLoaded = false;
+
+    public AudioClip SFX_LoadedAmmo;
+    public AudioClip SFX_CigBlocksCleared;
+    public AudioClip SFX_AllStaticCleared;
+    public AudioClip SFX_NewBlock;
+    public AudioClip SFX_Nudge;
+    public AudioSource AudioSource;
 
     private class TileMap
     {
@@ -231,7 +238,7 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
 
             if (GameManager.obj.UnlockedUpgrades.HasFlag(GameManager.Upgrade.EXPLOSIVE))
             {
-                var boundObjs = obj.BoundedTo.ToListPooled();
+                var boundObjs = obj.BoundedTo.Where(r => r.ObjType == GridObject.Type.JUNK).ToListPooled();
                 foreach (var gridObject in boundObjs)
                 {
                     if (gridObject != null)
@@ -241,6 +248,26 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
                     }
                 }
                 boundObjs.Free();
+            }
+
+            if (GameManager.obj.UnlockedUpgrades.HasFlag(GameManager.Upgrade.STATIC))
+            {
+                if (obj.ObjType == GridObject.Type.CIG)
+                {
+                    void RemoveNearbyJunk(int nx, int ny)
+                    {
+                        var gridObject = ObjectAt(nx, ny);
+                        if (!OutOfBounds(nx, ny) && gridObject?.ObjType == GridObject.Type.JUNK)
+                        {
+                            if (RemoveObjectAt(nx, ny))
+                                gridObject.BeginConsume();
+                        }
+                    }
+                    RemoveNearbyJunk(x + 1, y);
+                    RemoveNearbyJunk(x - 1, y);
+                    RemoveNearbyJunk(x, y + 1);
+                    RemoveNearbyJunk(x, y - 1);
+                }
             }
 
             obj.DestroyAllBinds();
@@ -289,8 +316,25 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
         BLOCKED,
     }
 
+    public void RemoveAll(GridObject.Type type)
+    {
+        if (SFX_AllStaticCleared != null)
+            AudioSource.PlayOneShot(SFX_AllStaticCleared);
+
+        foreach (var block in map.IterateAllBlocks().ToList())
+        {
+            if (block.ObjType == type)
+            {
+                map.RemoveObjectAt(block.X, block.Y);
+                block.BeginConsume();
+            }
+        }
+    }
+
+
     private int spawned = 0;
-    private const int EVERYXISAMMO = 10;
+    private const int EVERYXISJUNK = 7;
+    private const int EVERYXISAMMO = 4;
     public bool SpawnNewGridObject()
     {
         var poll = new WeightedPoll<pair<int, int>>();
@@ -318,9 +362,9 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
 
             // assign type
             var typePoll = new WeightedPoll<GridObject.Type>();
-            typePoll.Vote(GridObject.Type.AMMO, spawned % EVERYXISAMMO == 0 ? 100 : 1);
-            typePoll.Vote(GridObject.Type.JUNK, 6);
-            typePoll.Vote(GridObject.Type.CIG, 3);
+            typePoll.Vote(GridObject.Type.AMMO, spawned % EVERYXISAMMO == 0 ? 100 : 2);
+            typePoll.Vote(GridObject.Type.JUNK, spawned % EVERYXISJUNK == 0 ? 50 : GameManager.obj.paybacks);
+            typePoll.Vote(GridObject.Type.CIG, 8);
             gridObject.ObjType = typePoll.WeightedRandomResult;
 
             map.SetObjectAt(gridObject, x, y);
@@ -332,15 +376,15 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
         var point = poll.WeightedRandomResult;
         var block1 = MakeObjectAt(point.First, point.Second);
 
-        if (block1.ObjType == GridObject.Type.JUNK)
+        if (block1.ObjType == GridObject.Type.CIG)
         {
-            if (dontSpawnRopeForX <= 0)
+            if (GameManager.obj.paybacks > 1)
             {
                 // make a second one if we can
                 TileMap.Dir dir = (TileMap.Dir) Random.Range(0, (int) TileMap.Dir.MAX);
                 int nx, ny;
                 map.TransformPointDir(dir, point.First, point.Second, out nx, out ny);
-                if (map.CanPlaceAt(nx, ny) && ny < LOADERH) 
+                if (map.CanPlaceAt(nx, ny) && ny < LOADERH)
                 {
                     var block2 = MakeObjectAt(nx, ny);
                     block2.MakeBoundTo(block1);
@@ -352,11 +396,10 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
                     }
                 }
             }
-            else
-            {
-                --dontSpawnRopeForX;
-            }
         }
+
+        if (SFX_NewBlock != null)
+            AudioSource.PlayOneShot(SFX_NewBlock);
 
         return true;
     }
@@ -366,6 +409,8 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
         int clearedDuringLoad = 0;
         if (shouldClearLoaded)
         {
+            if (SFX_LoadedAmmo != null)
+                AudioSource.PlayOneShot(SFX_LoadedAmmo);
             ShutterAnimator.SetTrigger("Open");
         }
 
@@ -388,7 +433,7 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
                     }
                 }
             }
-            else if (block.ObjType == GridObject.Type.JUNK || block.ObjType == GridObject.Type.CIG)
+            else if (/*block.ObjType == GridObject.Type.JUNK ||*/ block.ObjType == GridObject.Type.CIG)
             {
                 List<GridObject> objsToRemove = ListPool<GridObject>.New();
                 map.FloodCollect(block.X, block.Y, ref objsToRemove, obj => obj.ObjType == block.ObjType);
@@ -404,6 +449,9 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
                         if (map.RemoveObjectAt(gridObject.X, gridObject.Y))
                             gridObject.BeginConsume();
                     }
+
+                    if (SFX_CigBlocksCleared != null)
+                        AudioSource.PlayOneShot(SFX_CigBlocksCleared);
                 }
 
             }
@@ -430,6 +478,9 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
                     Root.DOPunchRotation(new Vector3(0, 0, punch), 0.166f);
                     break;
             }
+
+            if (SFX_Nudge != null)
+                AudioSource.PlayOneShot(SFX_Nudge);
 
             bool somethingSlid = true;
             do
