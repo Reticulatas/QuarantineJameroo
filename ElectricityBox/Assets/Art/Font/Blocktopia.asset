@@ -94,9 +94,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 71c1514a6bd24e1e882cebbe1904ce04, type: 3}
   m_Name: Blocktopia
   m_EditorClassIdentifier: 
-  hashCode: 0
+  hashCode: -335821078
   material: {fileID: -4735568389893339754}
-  materialHashCode: 0
+  materialHashCode: -1353347551
   m_Version: 1.1.0
   m_SourceFontFileGUID: d4390a497683f774b8ef5ae964121d5e
   m_SourceFontFile_EditorRef: {fileID: 0}
