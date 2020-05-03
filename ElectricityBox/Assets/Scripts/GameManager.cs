@@ -28,6 +28,8 @@ public class GameManager : BehaviourSingleton<GameManager>
     private bool lost = false;
     public bool Lost => lost;
 
+    private bool shopping;
+
     private readonly List<IWantsBeats> beatWanters = new List<IWantsBeats>();
 
     public event Action<int> DamageDelt;
@@ -66,15 +68,33 @@ public class GameManager : BehaviourSingleton<GameManager>
         DamageDelt?.Invoke(amount);
     }
 
+    public void ShowShop()
+    {
+        shopping = true;
+        SceneManager.LoadScene("shop", LoadSceneMode.Additive);
+    }
+
+    public void HideShop()
+    {
+        shopping = false;
+        SceneManager.UnloadSceneAsync("shop");
+    }
+
     public void Update()
     {
-        if (lost)
+        if (lost || shopping)
             return;
 
+        #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.F2))
         {
             Lose();
         }
+        if (Input.GetKeyDown(KeyCode.F5))
+        {
+            ShowShop();
+        }
+        #endif
 
         gameTime += Time.deltaTime;
 
