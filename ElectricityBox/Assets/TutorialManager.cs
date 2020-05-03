@@ -51,7 +51,7 @@ public class TutorialManager : MonoBehaviour
 
             if (steps.All(x => x.obj.activeSelf))
             {
-                PressEnter.GetComponent<TMPro.TextMeshProUGUI>().text = "<color=orange>ENTER</color> to <color=#05ffa1>BEGIN</color>";
+                PressEnter.GetComponent<TMPro.TextMeshProUGUI>().text = "<color=orange>SPACE</color> to <color=#05ffa1>BEGIN</color>";
             }
 
             PressEnter.SetActive(true);

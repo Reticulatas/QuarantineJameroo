@@ -7,6 +7,7 @@ using UnityEngine.UI;
 public class MainMenuManager : MonoBehaviour
 {
     public Animator Animator;
+    public int MainSceneIndex;
     public int TutorialSceneIndex;
     public GameObject SettingsMenu;
 
@@ -30,13 +31,18 @@ public class MainMenuManager : MonoBehaviour
         Screen.fullScreen = !Screen.fullScreen;
     }
 
+    private static bool hasVisitedTutorialScene = false;
     void Update()
     {
         if (starting)
         {
             if (Animator.GetCurrentAnimatorStateInfo(0).IsName("DONE"))
             {
-                SceneManager.LoadScene(TutorialSceneIndex);
+                if (!hasVisitedTutorialScene)
+                    SceneManager.LoadScene(TutorialSceneIndex);
+                else
+                    SceneManager.LoadScene(MainSceneIndex);
+                hasVisitedTutorialScene = true;
             }
             return;
         }

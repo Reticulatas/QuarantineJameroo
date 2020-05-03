@@ -151,7 +151,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Animator: {fileID: 1705414753}
-  TutorialSceneIndex: 0
+  MainSceneIndex: 2
+  TutorialSceneIndex: 1
   SettingsMenu: {fileID: 1323593525}
   volumeSlider: {fileID: 268854478}
 --- !u!4 &37680434
