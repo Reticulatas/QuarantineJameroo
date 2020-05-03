@@ -124,7 +124,7 @@ public class GridObject : MonoBehaviour, IWantsBeats
 
     private Tween moveTween;
 
-    public void StartMoveToIntended()
+    public void StartMoveToIntended(Ease ease = Ease.InCubic)
     {
         if (moveTween != null && moveTween.IsPlaying())
         {
@@ -134,7 +134,7 @@ public class GridObject : MonoBehaviour, IWantsBeats
         var intendedWorldPos = GetIntendedWorldPos();
         if (Vector3.Distance(transform.position, intendedWorldPos) > float.Epsilon)
         {
-            moveTween = transform.DOLocalMove(intendedWorldPos, GameManager.BEATTIMER * .9f).SetEase(Ease.InCubic);
+            moveTween = transform.DOLocalMove(intendedWorldPos, GameManager.BEATTIMER * .9f).SetEase(ease);
         }
     }
 
