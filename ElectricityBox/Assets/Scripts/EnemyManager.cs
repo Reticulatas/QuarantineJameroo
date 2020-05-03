@@ -1,18 +1,33 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using Data.Util;
 using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
-public class EnemyManager : MonoBehaviour, IWantsBeats
+public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
 {
     public int NextEnemyHealth;
     
     [SerializeField] private GameObject[] enemies;
     [SerializeField] private Vector3 spawnPosition;
-    [SerializeField] private float timeToEnter;
+    [SerializeField] public float TimeToEnter;
     [SerializeField] private int bigBeatsToSpawnEnemy;
+
+    [SerializeField] private float rotSpeedMin;
+    [SerializeField] private float rotSpeedMax;
+
+    [SerializeField] private float noiseResolutionMin;
+    [SerializeField] private float noiseResolutionMax;
+    [SerializeField] private float noiseSpeedMin;
+    [SerializeField] private float noiseSpeedMax;
+
+    [SerializeField] private float bobAmplitude;
+    [SerializeField] private float bobSpeed;
+
+    [SerializeField] private Vector3 textOffset;
+    
     
     private int bigBeatCounter = 0;
 
@@ -20,14 +35,16 @@ public class EnemyManager : MonoBehaviour, IWantsBeats
     public event Action EnemyDestroyed;
     
     private Enemy CurrentEnemy;
+    private TMP_Text healthText;
+    private RectTransform healthTextTransform;
     
     
     private class Enemy
     {
-        public Enemy(GameObject _obj, TMP_Text _healthText, int _maxHealth)
+        public Enemy(GameObject _obj, int _maxHealth)
         {
             obj = _obj;
-            healthText = _healthText;
+            transform = _obj.transform;
             health = _maxHealth;
             displayedHealth = (float)_maxHealth;
             maxHealth = _maxHealth;
@@ -44,9 +61,9 @@ public class EnemyManager : MonoBehaviour, IWantsBeats
         }
 
         public readonly GameObject obj;
+        public readonly Transform transform;
         public int health;
         public float displayedHealth;
-        public readonly TMP_Text healthText;
         public int maxHealth;
     }
     
@@ -55,13 +72,16 @@ public class EnemyManager : MonoBehaviour, IWantsBeats
     {
         GameManager.obj.Register(this);
         GameManager.obj.DamageDelt += ObjOnDamageDelt;
-        
+        healthText = GetComponentInChildren<TMP_Text>();
+        healthTextTransform = GetComponentInChildren<RectTransform>();
     }
 
 
-    void Awake()
+    public override void Awake()
     {
+        base.Awake();
     }
+    
 
     // Update is called once per frame
     void Update()
@@ -83,18 +103,25 @@ public class EnemyManager : MonoBehaviour, IWantsBeats
     void DestroyEnemy()
     {
         Destroy(CurrentEnemy.obj);
-        CurrentEnemy = null; 
+        CurrentEnemy = null;
+        EnemyDestroyed.Invoke();
     }
 
     void UpdateHealthText()
     {
-        if (CurrentEnemy == null) return;
+        if (CurrentEnemy == null)
+        {
+            healthText.SetText("");
+            return;
+        }
 
         float displayedHealth = CurrentEnemy.displayedHealth;
         int health = CurrentEnemy.health;
         displayedHealth = (Mathf.MoveTowards(displayedHealth, (float)health + 0.5f, 1.0f));
         CurrentEnemy.SetDisplayedHealth(displayedHealth);
-        CurrentEnemy.healthText.SetText($"{Mathf.Floor(displayedHealth).ToString()}");
+        
+        healthText.SetText($"{Mathf.Floor(displayedHealth).ToString()}");
+        healthTextTransform.anchoredPosition3D = CurrentEnemy.transform.position + textOffset;
     }
     
     private void ObjOnDamageDelt(int damage)
@@ -115,11 +142,20 @@ public class EnemyManager : MonoBehaviour, IWantsBeats
 
         
         var newEnemy = Instantiate(enemies[i], gameObject.transform);
-        newEnemy.GetComponent<EnemyScript>().TargetPosition = spawnPosition;
-        newEnemy.GetComponent<EnemyScript>().MoveTime = timeToEnter;
+        var enemyScript = newEnemy.GetComponent<EnemyScript>();
+        enemyScript.TargetPosition = spawnPosition;
+        enemyScript.MoveTime = TimeToEnter;
+        enemyScript.RotationSpeed = Random.Range(rotSpeedMin, rotSpeedMax);
+        enemyScript.BobAmplitude = bobAmplitude;
+        enemyScript.BobSpeed = bobSpeed;
 
-        CurrentEnemy = new Enemy(newEnemy, newEnemy.GetComponentInChildren<TMP_Text>(), health);
-        
+        var material = newEnemy.GetComponentInChildren<MeshRenderer>().material;
+        material.SetFloat("_Resolution", Random.Range(noiseResolutionMin, noiseResolutionMax));
+        material.SetFloat("_Speed", Random.Range(noiseSpeedMin, noiseSpeedMax));
+
+        CurrentEnemy = new Enemy(newEnemy, health);
+
+        EnemySpawned.Invoke(newEnemy);
     }
 
     public void OnBeat()

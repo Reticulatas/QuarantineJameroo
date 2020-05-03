@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Timers;
+using DG.Tweening;
 using UnityEngine;
 using UnityEngine.UIElements;
 
@@ -24,6 +25,14 @@ public class ObjectGenerator : MonoBehaviour
     [SerializeField] private float spawnMinSize = 1.0f;
     [SerializeField] private float spawnMaxSize = 1.0f;
 
+    [SerializeField] private float timeToSlow;
+
+    private float targetMoveScale = 1.0f;
+    private float startMoveScale = 1.0f;
+    private float moveScale = 1.0f;
+    private float moveScaleTimer = 0.0f;
+    private Ease easingFunc = Ease.Linear;
+    
     private struct Environment
     {
         public Environment(Transform _transform, int _rotationSpeed, float _moveSpeed)
@@ -50,6 +59,36 @@ public class ObjectGenerator : MonoBehaviour
             Spawn(Time.fixedDeltaTime);
             Advance(Time.fixedDeltaTime);
         }
+        
+        EnemyManager.obj.EnemySpawned += ObjOnEnemySpawned;
+        EnemyManager.obj.EnemyDestroyed += ObjOnEnemyDestroyed;
+    }
+
+    void Awake()
+    {
+
+    }
+
+    void OnDestroy()
+    {
+        EnemyManager.obj.EnemySpawned -= ObjOnEnemySpawned;
+        EnemyManager.obj.EnemyDestroyed -= ObjOnEnemyDestroyed;
+    }
+
+    private void ObjOnEnemyDestroyed()
+    {
+        startMoveScale = moveScale;
+        targetMoveScale = 1.0f;
+        moveScaleTimer = 0.0f;
+        easingFunc = Ease.OutCubic;
+    }
+
+    private void ObjOnEnemySpawned(GameObject obj)
+    {
+        startMoveScale = moveScale;
+        targetMoveScale = 0.0f;
+        moveScaleTimer = 0.0f;
+        easingFunc = Ease.InCubic;
     }
 
     // Update is called once per frame
@@ -58,7 +97,7 @@ public class ObjectGenerator : MonoBehaviour
         Spawn(Time.deltaTime);
         Advance(Time.deltaTime);
     }
-
+    
     void Spawn(float dt)
     {
         int random = Random.Range(0, objects.Length);
@@ -101,13 +140,16 @@ public class ObjectGenerator : MonoBehaviour
 
     void Advance(float dt)
     {
+        float percentage = (Mathf.Min(timeToSlow, moveScaleTimer) / timeToSlow);
+        moveScale = DOVirtual.EasedValue(startMoveScale, targetMoveScale, percentage, easingFunc);
+        
         for (var index = 0; index < managedObjects.Count; index++)
         {
             var env = managedObjects[index];
             if (!env.HasValue) continue;
 
             var pos = env.Value.transform.position;
-            pos.x -= env.Value.moveSpeed * dt;
+            pos.x -= env.Value.moveSpeed * dt * moveScale;
 
             env.Value.transform.Rotate(Vector3.up, env.Value.rotationSpeed * dt);
             env.Value.transform.position = pos;
@@ -118,5 +160,7 @@ public class ObjectGenerator : MonoBehaviour
                 managedObjects[index] = null;
             }
         }
+
+        moveScaleTimer += Time.deltaTime;
     }
 }
