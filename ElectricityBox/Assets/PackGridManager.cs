@@ -293,7 +293,7 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
     private const int EVERYXISAMMO = 10;
     public bool SpawnNewGridObject()
     {
-        var poll = new SimplePoll<pair<int, int>>();
+        var poll = new WeightedPoll<pair<int, int>>();
 
         for (int x = 0; x < GRIDW; ++x)
         {
@@ -329,7 +329,7 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
             return gridObject;
         }
 
-        var point = poll.Result;
+        var point = poll.WeightedRandomResult;
         var block1 = MakeObjectAt(point.First, point.Second);
 
         if (block1.ObjType == GridObject.Type.JUNK)
@@ -394,18 +394,9 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
                 map.FloodCollect(block.X, block.Y, ref objsToRemove, obj => obj.ObjType == block.ObjType);
                 if (objsToRemove.Count >= MINTODESTROYJUNK)
                 {
-                    bool hasStatic = GameManager.obj.UnlockedUpgrades.HasFlag(GameManager.Upgrade.STATIC);
                     if (block.ObjType == GridObject.Type.CIG)
                     {
-                        // give money for cigs (or junk if upgrade done)
-                        if (hasStatic)
-                            GameManager.obj.AddMoney(-objsToRemove.Count * 2);
-                        else
-                            GameManager.obj.AddMoney(objsToRemove.Count * 5);
-                    }
-                    if (block.ObjType == GridObject.Type.JUNK && hasStatic)
-                    {
-                        GameManager.obj.AddMoney(objsToRemove.Count * 4);
+                        GameManager.obj.AddMoney(objsToRemove.Count * 5);
                     }
 
                     foreach (var gridObject in objsToRemove)

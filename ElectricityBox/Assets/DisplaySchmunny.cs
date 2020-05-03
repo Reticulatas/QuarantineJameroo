@@ -24,6 +24,6 @@ public class DisplaySchmunny : MonoBehaviour
         storedSchmunny = Mathf.MoveTowards(storedSchmunny, (float)gameManager.Schmunny + 0.5f, 1.0f);
         int nextUpgrade = gameManager.GetMoneyForNextUpgrade() - Mathf.FloorToInt(storedSchmunny);
 
-        text.SetText($"${Mathf.FloorToInt(storedSchmunny)}{Environment.NewLine}<size=45%><smallcaps>upgrade in ${nextUpgrade}</smallcaps></size>");
+        text.SetText($"<color=orange>${Mathf.FloorToInt(storedSchmunny)}</color>{Environment.NewLine}<size=45%><smallcaps>upgrade in ${nextUpgrade}</smallcaps></size>");
     }
 }

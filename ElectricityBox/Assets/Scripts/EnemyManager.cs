@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using Data.Util;
 using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -47,6 +45,7 @@ public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
     private TMP_Text healthText;
     private RectTransform healthTextTransform;
 
+    public GameObject KoreanMMOTextPrefab;
 
     private class Enemy
     {
@@ -97,18 +96,6 @@ public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
     {
         UpdateHealthText();
 
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-            ObjOnDamageDelt(1);
-        if (Input.GetKeyDown(KeyCode.Alpha2))
-            ObjOnDamageDelt(2);
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-            ObjOnDamageDelt(3);
-        if (Input.GetKeyDown(KeyCode.Alpha4))
-            ObjOnDamageDelt(4);
-        if (Input.GetKeyDown(KeyCode.Alpha5))
-            ObjOnDamageDelt(5);
-        if (Input.GetKeyDown(KeyCode.Alpha6))
-            ObjOnDamageDelt(6);
         if (Input.GetKeyDown(KeyCode.F7))
             DestroyEnemy();
     }
@@ -124,6 +111,7 @@ public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
         Destroy(CurrentEnemy.obj);
         CurrentEnemy = null;
         EnemyDestroyed.Invoke();
+        GameManager.obj.OnEnemyKilled();
     }
 
     void UpdateHealthText()
@@ -174,7 +162,7 @@ public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
                 CreateMissile(frontLauncher, true);
                 CreateMissile(backLauncher, false);
                 break;
-            case 6:
+            default:
                 CreateMissile(topLauncher, true);
                 CreateMissile(frontLauncher, true);
                 CreateMissile(backLauncher, true);
@@ -207,11 +195,19 @@ public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
 
         if (CurrentEnemy == null) yield break;
 
-        CurrentEnemy.SetHealth(CurrentEnemy.health - damage);
+        // calc combo
+        int actualDamage = damage < 10 ? damage * 2 : 999;
+        CurrentEnemy.SetHealth(CurrentEnemy.health - actualDamage);
+
+        Instantiate(KoreanMMOTextPrefab, CurrentEnemy.obj.transform.position, Quaternion.identity).GetComponent<KoreanMMOText>().Init(actualDamage);
 
         if (CurrentEnemy.health <= 0)
         {
-            NextEnemyHealth = Mathf.FloorToInt(NextEnemyHealth * 1.75f);
+            if (NextEnemyHealth % 2 == 0)
+                NextEnemyHealth += 1;
+            else
+                NextEnemyHealth += 2;
+            GameManager.obj.SpeedUp();
             DestroyEnemy();
         }
     }

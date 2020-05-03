@@ -353,6 +353,12 @@ PrefabInstance:
       propertyPath: missileOutwardDistance
       value: 4.5
       objectReference: {fileID: 0}
+    - target: {fileID: 8278234847848481684, guid: d210b0383eccf03479a4e839b33dc3a6,
+        type: 3}
+      propertyPath: KoreanMMOTextPrefab
+      value: 
+      objectReference: {fileID: 456328037600927596, guid: e8e88db476fd76f43bfda1d24ac03499,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d210b0383eccf03479a4e839b33dc3a6, type: 3}
 --- !u!4 &224564144 stripped
@@ -1552,7 +1558,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6598620840328720224}
-  - component: {fileID: 1503182969449132677}
   - component: {fileID: 7532589894063727933}
   m_Layer: 0
   m_Name: bird_tri
@@ -1572,8 +1577,8 @@ Transform:
   m_LocalPosition: {x: -0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
-  m_Father: {fileID: 1488238959946397138}
-  m_RootOrder: 0
+  m_Father: {fileID: 0}
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!23 &7532589894063727933
 MeshRenderer:
