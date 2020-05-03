@@ -1004,7 +1004,7 @@ MonoBehaviour:
   SFX_CigBlocksCleared: {fileID: 0}
   SFX_AllStaticCleared: {fileID: 0}
   SFX_NewBlock: {fileID: 0}
-  SFX_Nudge: {fileID: 8300000, guid: f01fd6c06c1575a4a8bdf98068d902b5, type: 3}
+  SFX_Nudge: {fileID: 8300000, guid: 42709b3449b3288418766f744fa98206, type: 3}
   AudioSource: {fileID: 1232444130}
 --- !u!4 &1232444129
 Transform:
@@ -1037,7 +1037,7 @@ AudioSource:
     type: 2}
   m_audioClip: {fileID: 0}
   m_PlayOnAwake: 0
-  m_Volume: 1
+  m_Volume: 0.75
   m_Pitch: 1
   Loop: 0
   Mute: 0

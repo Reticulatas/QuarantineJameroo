@@ -364,6 +364,16 @@ PrefabInstance:
       propertyPath: AudioSource
       value: 
       objectReference: {fileID: 224564146}
+    - target: {fileID: 8278234847848481684, guid: d210b0383eccf03479a4e839b33dc3a6,
+        type: 3}
+      propertyPath: SFX_MissileShot
+      value: 
+      objectReference: {fileID: 8300000, guid: 8f86aa568325ee842a97d5ccdbc8db3a, type: 3}
+    - target: {fileID: 8278234847848481684, guid: d210b0383eccf03479a4e839b33dc3a6,
+        type: 3}
+      propertyPath: SFX_MissileHit
+      value: 
+      objectReference: {fileID: 8300000, guid: 86147ce0666aca74a965cceb812a9476, type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: d210b0383eccf03479a4e839b33dc3a6, type: 3}
 --- !u!4 &224564144 stripped
