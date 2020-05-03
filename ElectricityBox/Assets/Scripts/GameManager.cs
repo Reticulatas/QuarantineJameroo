@@ -16,8 +16,11 @@ public class GameManager : BehaviourSingleton<GameManager>
     private ulong beats;
 
     public const int BEATSINABIGBEAT = 8;
-    public const float BIGBEATTIME = 1.0f;
-    public const float BEATTIMER = BIGBEATTIME / BEATSINABIGBEAT;
+    public static float BIGBEATTIME = 1.0f;
+    public static float BEATTIMER
+    {
+        get { return BIGBEATTIME / BEATSINABIGBEAT; }
+    }
 
     public int LeftSideSceneIndex;
     public int RightSideSceneIndex;
@@ -28,9 +31,21 @@ public class GameManager : BehaviourSingleton<GameManager>
     private bool lost = false;
     public bool Lost => lost;
 
+    private bool shopping;
+
     private readonly List<IWantsBeats> beatWanters = new List<IWantsBeats>();
 
     public event Action<int> DamageDelt;
+
+    [Flags]
+    public enum Upgrade
+    {
+        NONE = 0,
+        MOAR = 1,
+        EXPLOSIVE = 1 << 1,
+        STATIC = 1 << 2
+    }
+    public Upgrade UnlockedUpgrades { get; private set; }
 
     public void Start()
     {
@@ -55,10 +70,30 @@ public class GameManager : BehaviourSingleton<GameManager>
         SceneManager.LoadSceneAsync("Lose", LoadSceneMode.Additive);
     }
 
+    private int upgrades = 0;
     public void AddMoney(int amount)
     {
-        Schmunny += amount;
+        Schmunny = Mathf.Clamp(Schmunny + amount, 0, 99999);
         Debug.Log("Schmunny: " + Schmunny);
+
+        var nextUpgradeMoney = GetMoneyForNextUpgrade();
+        if (Schmunny >= nextUpgradeMoney)
+        {
+            Schmunny -= nextUpgradeMoney;
+            ShowShop();
+        }
+    }
+
+    public void SpeedUp()
+    {
+        BIGBEATTIME *= 0.8f;
+        ++upgrades;
+    }
+
+    public int GetMoneyForNextUpgrade()
+    {
+        const int MoneyForUpgrade = 25;
+        return MoneyForUpgrade * (upgrades + 2);
     }
 
     public void DealDamage(int amount)
@@ -66,15 +101,39 @@ public class GameManager : BehaviourSingleton<GameManager>
         DamageDelt?.Invoke(amount);
     }
 
+    public void ShowShop()
+    {
+        shopping = true;
+        SceneManager.LoadScene("shop", LoadSceneMode.Additive);
+    }
+
+    public void HideShop()
+    {
+        shopping = false;
+        SceneManager.UnloadSceneAsync("shop");
+    }
+
+    public void UnlockUpgrade(Upgrade up)
+    {
+        UnlockedUpgrades |= up;
+        ++upgrades;
+    }
+
     public void Update()
     {
-        if (lost)
+        if (lost || shopping)
             return;
 
+        #if UNITY_EDITOR
         if (Input.GetKeyDown(KeyCode.F2))
         {
             Lose();
         }
+        if (Input.GetKeyDown(KeyCode.F5))
+        {
+            ShowShop();
+        }
+        #endif
 
         gameTime += Time.deltaTime;
 

@@ -202,6 +202,8 @@ public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
         CurrentEnemy.SetHealth(CurrentEnemy.health - damage);
         
         if (CurrentEnemy.health <= 0)
+        {
+            NextEnemyHealth = Mathf.FloorToInt(NextEnemyHealth * 1.75f);
             DestroyEnemy();
     }
 
