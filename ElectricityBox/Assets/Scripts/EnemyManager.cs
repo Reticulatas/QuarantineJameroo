@@ -27,7 +27,16 @@ public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
     [SerializeField] private float bobSpeed;
 
     [SerializeField] private Vector3 textOffset;
-    
+
+    [SerializeField] private Transform baseLauncher;
+    [SerializeField] private Transform topLauncher;
+    [SerializeField] private Transform frontLauncher;
+    [SerializeField] private Transform backLauncher;
+
+    [SerializeField] private GameObject missileObject;
+    [SerializeField] private float missileTravelTime;
+    [SerializeField] private float missileOutwardRatio;
+    [SerializeField] private float missileOutwardDistance;
     
     private int bigBeatCounter = 0;
 
@@ -87,11 +96,15 @@ public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
     void Update()
     {
         UpdateHealthText();
-
-        if (Input.GetKeyDown(KeyCode.F3))
-        {
+        
+        if (Input.GetKeyDown(KeyCode.Keypad1))
+            ObjOnDamageDelt(1);
+        if (Input.GetKeyDown(KeyCode.Keypad2))
+            ObjOnDamageDelt(2);
+        if (Input.GetKeyDown(KeyCode.Keypad3))
+            ObjOnDamageDelt(3);
+        if (Input.GetKeyDown(KeyCode.F7))
             DestroyEnemy();
-        }
     }
 
     void OnDestroy()
@@ -127,12 +140,69 @@ public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
     private void ObjOnDamageDelt(int damage)
     {
         if (CurrentEnemy == null) return;
+        
+        LaunchMissile(damage);
+        StartCoroutine(Co_DealDamage(damage));
+    }
+
+    private void LaunchMissile(int damage)
+    {
+        switch (damage)
+        {
+            case 1:
+                CreateMissile(topLauncher, false);
+                break;
+            case 2:
+                CreateMissile(topLauncher, true);
+                break;
+            case 3:
+                CreateMissile(topLauncher, true);
+                CreateMissile(frontLauncher, false);
+                break;
+            case 4:
+                CreateMissile(topLauncher, true);
+                CreateMissile(frontLauncher, true);
+                break;
+            case 5:
+                CreateMissile(topLauncher, true);
+                CreateMissile(frontLauncher, true);
+                CreateMissile(backLauncher, false);
+                break;
+            case 6:
+                CreateMissile(topLauncher, true);
+                CreateMissile(frontLauncher, true);
+                CreateMissile(backLauncher, true);
+                break;
+        }
+    }
+
+    private void CreateMissile(Transform launcher, bool beeg)
+    {
+        var missileObj = Instantiate(missileObject);
+        var missile = missileObj.GetComponent<Missile>();
+        missile.EnemyTransform = CurrentEnemy.transform;
+        missile.OutwardTravelTime = missileOutwardRatio * missileTravelTime;
+        missile.OutwardVector = Vector3.Normalize(topLauncher.position - baseLauncher.position) * missileOutwardDistance;
+        missile.TotalTravelTime = missileTravelTime;
+        missile.LauncherTransform = launcher;
+
+        if (beeg == false)
+        {
+            missile.transform.localScale *= 0.5f;
+        }
+    }
+
+    private IEnumerator Co_DealDamage(int damage)
+    {
+        var waitForSeconds = new WaitForSeconds(missileTravelTime);
+        yield return waitForSeconds;
+        
+        if (CurrentEnemy == null) yield break;
 
         CurrentEnemy.SetHealth(CurrentEnemy.health - damage);
+        
         if (CurrentEnemy.health <= 0)
-        {
             DestroyEnemy();
-        }
     }
 
 
