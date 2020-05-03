@@ -720,7 +720,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   LeftSideSceneIndex: 3
-  RightSideSceneIndex: 2
+  RightSideSceneIndex: 4
   DestroyAfterLoading:
   - {fileID: 585061111}
   Schmunny: 0
