@@ -151,7 +151,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Animator: {fileID: 1705414753}
-  MainSceneIndex: 1
+  TutorialSceneIndex: 0
   SettingsMenu: {fileID: 1323593525}
   volumeSlider: {fileID: 268854478}
 --- !u!4 &37680434
@@ -683,9 +683,9 @@ RectTransform:
   m_Father: {fileID: 1418971454}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 150, y: -164.74501}
   m_SizeDelta: {x: 200, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &268854478
@@ -1407,7 +1407,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -1483,9 +1483,9 @@ RectTransform:
   m_Father: {fileID: 1418971454}
   m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 0}
+  m_AnchorMin: {x: 0, y: 1}
+  m_AnchorMax: {x: 0, y: 1}
+  m_AnchoredPosition: {x: 150, y: -259.745}
   m_SizeDelta: {x: 230, y: 70}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1213387382
@@ -1656,7 +1656,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: <size=75%>hit</size> ENTER <size=75%>to frag n' bag</size>
+  m_text: <size=75%>hit</size> SPACE <size=75%>to frag n' bag</size>
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0db01cbd0ceae5f41a8e56bb55b1ef55, type: 2}
   m_sharedMaterial: {fileID: -4735568389893339754, guid: 0db01cbd0ceae5f41a8e56bb55b1ef55,
@@ -1792,7 +1792,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1323593526
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1922,10 +1922,28 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: "<b>Arrow Keys</b> - Nudge backpack to shift items\n<b>Enter</b> - Fire
-    ammo in loading zone\n\nGet ammo to bottom loading zone. \n<b>More ammo = more
-    damage.</b>\n\nMatch 3 junk or cigarettes to clear.\nMatching cigarettes awards
-    <b>Shmunny</b> <size=50%><i>(Sha-money)</i></size>\n"
+  m_text: '<color=orange>Made for QuarantineJam 2020</color>
+
+    Nicholas Fuller
+
+    Jonathan
+    Bourim
+
+    <shill> Check out our in-dev RPG <color=yellow>@SubjectRedacted</color>
+    </shill>
+
+
+    <size=90%>
+
+    <smallcaps>controls:</smallcaps>
+
+    <b>Arrow
+    Keys</b> - Nudge backpack to shift items
+
+    <b>SPACE</b> - Fire ammo in loading
+    zone
+
+    </size>'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 0db01cbd0ceae5f41a8e56bb55b1ef55, type: 2}
   m_sharedMaterial: {fileID: -4735568389893339754, guid: 0db01cbd0ceae5f41a8e56bb55b1ef55,
@@ -1995,12 +2013,12 @@ MonoBehaviour:
   m_margin: {x: 0, y: 0, z: 0, w: 0}
   m_textInfo:
     textComponent: {fileID: 1410410017}
-    characterCount: 222
+    characterCount: 208
     spriteCount: 0
-    spaceCount: 41
-    wordCount: 37
+    spaceCount: 34
+    wordCount: 32
     linkCount: 0
-    lineCount: 8
+    lineCount: 9
     pageCount: 1
     materialCount: 1
   m_isUsingLegacyAnimationComponent: 0
@@ -3002,7 +3020,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0, y: 0}
+  m_AnchorMax: {x: 0, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 10, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}

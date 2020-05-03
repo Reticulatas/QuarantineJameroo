@@ -7,7 +7,7 @@ using UnityEngine.UI;
 public class MainMenuManager : MonoBehaviour
 {
     public Animator Animator;
-    public int MainSceneIndex;
+    public int TutorialSceneIndex;
     public GameObject SettingsMenu;
 
     public Slider volumeSlider;
@@ -36,12 +36,12 @@ public class MainMenuManager : MonoBehaviour
         {
             if (Animator.GetCurrentAnimatorStateInfo(0).IsName("DONE"))
             {
-                SceneManager.LoadScene(MainSceneIndex);
+                SceneManager.LoadScene(TutorialSceneIndex);
             }
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             Animator.SetTrigger("Start");
             starting = true;
