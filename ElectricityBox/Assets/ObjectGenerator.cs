@@ -100,6 +100,8 @@ public class ObjectGenerator : MonoBehaviour
     
     void Spawn(float dt)
     {
+        if (moveScale < 0.8f) return;
+        
         int random = Random.Range(0, objects.Length);
 
         objectsToSpawn += dt / spawnInterval;
