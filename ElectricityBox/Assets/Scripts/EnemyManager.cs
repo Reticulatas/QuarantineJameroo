@@ -48,6 +48,11 @@ public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
 
     public GameObject KoreanMMOTextPrefab;
 
+    public AudioSource AudioSource;
+    public AudioClip SFX_MissileShot;
+    public AudioClip SFX_MissileHit;
+    public AudioClip SFX_EnemyDeath;
+
     private class Enemy
     {
         public Enemy(GameObject _obj, int _maxHealth)
@@ -188,6 +193,9 @@ public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
         {
             missile.transform.localScale *= 0.5f;
         }
+
+        if (SFX_MissileShot != null)
+            AudioSource.PlayOneShot(SFX_MissileShot);
     }
 
     private IEnumerator Co_DealDamage(int damage)
@@ -201,10 +209,16 @@ public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
         int actualDamage = damage < 10 ? damage * 2 : 999;
         CurrentEnemy.SetHealth(CurrentEnemy.health - actualDamage);
 
+        if (SFX_MissileHit != null)
+            AudioSource.PlayOneShot(SFX_MissileHit);
+
         Instantiate(KoreanMMOTextPrefab, CurrentEnemy.obj.transform.position, Quaternion.identity).GetComponent<KoreanMMOText>().Init(actualDamage);
 
         if (CurrentEnemy.health <= 0)
         {
+            if (SFX_EnemyDeath != null)
+                AudioSource.PlayOneShot(SFX_EnemyDeath);
+
             var rend = CurrentEnemy.obj.GetComponentInChildren<MeshRenderer>();
             yield return DOVirtual.Float(1.1f, 0.0f, 2.0f, (value =>
             {
