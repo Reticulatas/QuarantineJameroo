@@ -282,7 +282,7 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
 
         for (int x = 0; x < GRIDW; ++x)
         {
-            for (int y = 0; y < LOADERH - 1; ++y)
+            for (int y = 0; y < LOADERH ; ++y)
             {
                 if (map.CanPlaceAt(x, y))
                     poll.Vote(new pair<int, int>(x, y));
@@ -309,7 +309,7 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
             gridObject.ObjType = typePoll.WeightedRandomResult;
 
             map.SetObjectAt(gridObject, x, y);
-            gridObject.StartMoveToIntended();
+            gridObject.StartMoveToIntended(Ease.OutQuart);
 
             return gridObject;
         }
@@ -325,7 +325,7 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
                 TileMap.Dir dir = (TileMap.Dir) Random.Range(0, (int) TileMap.Dir.MAX);
                 int nx, ny;
                 map.TransformPointDir(dir, point.First, point.Second, out nx, out ny);
-                if (map.CanPlaceAt(nx, ny))
+                if (map.CanPlaceAt(nx, ny) && ny < LOADERH) 
                 {
                     var block2 = MakeObjectAt(nx, ny);
                     block2.MakeBoundTo(block1);
@@ -476,7 +476,7 @@ public class PackGridManager : MonoBehaviour , IWantsBeats
             queuedDirMove = TileMap.Dir.SOUTH;
         }
 
-        if (Input.GetKeyDown(KeyCode.Return))
+        if (Input.GetKeyDown(KeyCode.Space))
         {
             shouldClearLoaded = true;
         }
