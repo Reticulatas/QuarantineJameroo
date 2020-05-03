@@ -192,6 +192,7 @@ public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
             Vector3.Normalize(launcher.position - baseLauncher.position) * missileOutwardDistance;
         missile.TotalTravelTime = missileTravelTime;
         missile.LauncherTransform = launcher;
+        missile.Enemy = CurrentEnemy.obj;
 
         if (beeg == false)
         {

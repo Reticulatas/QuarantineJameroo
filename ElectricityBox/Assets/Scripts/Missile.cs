@@ -13,6 +13,7 @@ public class Missile : MonoBehaviour
     public Transform EnemyTransform;
     public float TotalTravelTime;
     public float OutwardTravelTime;
+    public GameObject Enemy;
 
     private float timer = 0.0f;
     
@@ -38,6 +39,12 @@ public class Missile : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (Enemy == null)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        
         if (timer < OutwardTravelTime)
         {
             transform.position = StartPosition + OutwardVector * DOVirtual.EasedValue(0.0f, 1.0f, timer / OutwardTravelTime, Ease.OutCubic);
