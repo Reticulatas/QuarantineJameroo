@@ -44,6 +44,7 @@ public class TutorialManager : MonoBehaviour
             {
                 var step1 = step;
                 steps.Where(x => x.step <= step1).Select(x => x.obj).ForEach(x => x.SetActive(true));
+                this.GetComponent<AudioSource>().Play();
 
                 yield return waitForSeconds;
                 ++step;
@@ -61,6 +62,7 @@ public class TutorialManager : MonoBehaviour
             }
         }
 
+        this.GetComponent<AudioSource>().Play();
         SceneManager.LoadScene(MainSceneIndex, LoadSceneMode.Single);
     }
 }

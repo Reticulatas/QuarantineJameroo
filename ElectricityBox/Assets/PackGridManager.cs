@@ -30,6 +30,13 @@ public class PackGridManager : BehaviourSingleton<PackGridManager>, IWantsBeats
 
     private bool shouldClearLoaded = false;
 
+    public AudioClip SFX_LoadedAmmo;
+    public AudioClip SFX_CigBlocksCleared;
+    public AudioClip SFX_AllStaticCleared;
+    public AudioClip SFX_NewBlock;
+    public AudioClip SFX_Nudge;
+    public AudioSource AudioSource;
+
     private class TileMap
     {
         private readonly TileType[,] tiles = new TileType[GRIDW, GRIDH];
@@ -311,6 +318,9 @@ public class PackGridManager : BehaviourSingleton<PackGridManager>, IWantsBeats
 
     public void RemoveAll(GridObject.Type type)
     {
+        if (SFX_AllStaticCleared != null)
+            AudioSource.PlayOneShot(SFX_AllStaticCleared);
+
         foreach (var block in map.IterateAllBlocks().ToList())
         {
             if (block.ObjType == type)
@@ -354,7 +364,7 @@ public class PackGridManager : BehaviourSingleton<PackGridManager>, IWantsBeats
             var typePoll = new WeightedPoll<GridObject.Type>();
             typePoll.Vote(GridObject.Type.AMMO, spawned % EVERYXISAMMO == 0 ? 100 : 2);
             typePoll.Vote(GridObject.Type.JUNK, spawned % EVERYXISJUNK == 0 ? 50 : GameManager.obj.paybacks);
-            typePoll.Vote(GridObject.Type.CIG, 6);
+            typePoll.Vote(GridObject.Type.CIG, 8);
             gridObject.ObjType = typePoll.WeightedRandomResult;
 
             map.SetObjectAt(gridObject, x, y);
@@ -388,6 +398,9 @@ public class PackGridManager : BehaviourSingleton<PackGridManager>, IWantsBeats
             }
         }
 
+        if (SFX_NewBlock != null)
+            AudioSource.PlayOneShot(SFX_NewBlock);
+
         return true;
     }
 
@@ -396,6 +409,8 @@ public class PackGridManager : BehaviourSingleton<PackGridManager>, IWantsBeats
         int clearedDuringLoad = 0;
         if (shouldClearLoaded)
         {
+            if (SFX_LoadedAmmo != null)
+                AudioSource.PlayOneShot(SFX_LoadedAmmo);
             ShutterAnimator.SetTrigger("Open");
         }
 
@@ -434,6 +449,9 @@ public class PackGridManager : BehaviourSingleton<PackGridManager>, IWantsBeats
                         if (map.RemoveObjectAt(gridObject.X, gridObject.Y))
                             gridObject.BeginConsume();
                     }
+
+                    if (SFX_CigBlocksCleared != null)
+                        AudioSource.PlayOneShot(SFX_CigBlocksCleared);
                 }
 
             }
@@ -460,6 +478,9 @@ public class PackGridManager : BehaviourSingleton<PackGridManager>, IWantsBeats
                     Root.DOPunchRotation(new Vector3(0, 0, punch), 0.166f);
                     break;
             }
+
+            if (SFX_Nudge != null)
+                AudioSource.PlayOneShot(SFX_Nudge);
 
             bool somethingSlid = true;
             do

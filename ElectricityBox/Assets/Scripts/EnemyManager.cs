@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using DG.Tweening;
 using TMPro;
 using UnityEngine;
 using Random = UnityEngine.Random;
@@ -60,7 +61,7 @@ public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
 
         public void SetHealth(int _health)
         {
-            health = _health;
+            health = Mathf.Clamp(_health, 0, 999);
         }
 
         public void SetDisplayedHealth(float _health)
@@ -110,7 +111,7 @@ public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
     {
         Destroy(CurrentEnemy.obj);
         CurrentEnemy = null;
-        EnemyDestroyed.Invoke();
+        EnemyDestroyed?.Invoke();
         GameManager.obj.OnEnemyKilled();
         PackGridManager.obj.RemoveAll(GridObject.Type.JUNK);
     }
@@ -204,6 +205,12 @@ public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
 
         if (CurrentEnemy.health <= 0)
         {
+            var rend = CurrentEnemy.obj.GetComponentInChildren<MeshRenderer>();
+            yield return DOVirtual.Float(1.1f, 0.0f, 2.0f, (value =>
+            {
+                rend.material.SetFloat("_Fade", value);
+            })).WaitForCompletion();
+
             if (NextEnemyHealth % 2 == 0)
                 NextEnemyHealth += 1;
             else
@@ -217,7 +224,6 @@ public class EnemyManager : BehaviourSingleton<EnemyManager>, IWantsBeats
     void GenerateEnemy(int health = 100)
     {
         int i = Random.Range(0, enemies.Length);
-
 
         var newEnemy = Instantiate(enemies[i], gameObject.transform);
         var enemyScript = newEnemy.GetComponent<EnemyScript>();

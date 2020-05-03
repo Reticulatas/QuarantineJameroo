@@ -36,11 +36,13 @@ public class ShopManager : MonoBehaviour
     public void OnUpgrade(int which)
     {
         somethingPicked = true;
+        this.GetComponent<AudioSource>().Play();
         GameManager.obj.UnlockUpgrade((GameManager.Upgrade)(1 << which));
         GameManager.obj.HideShop();
     }
     public void OnCancel()
     {
+        this.GetComponent<AudioSource>().Play();
         somethingPicked = true;
         GameManager.obj.SpeedUpMajor();
         GameManager.obj.HideShop();

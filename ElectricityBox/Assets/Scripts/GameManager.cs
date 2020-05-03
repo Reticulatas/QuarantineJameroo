@@ -31,6 +31,8 @@ public class GameManager : BehaviourSingleton<GameManager>
     public int paybacks = 0;
     public TMPro.TextMeshProUGUI PaybacksText;
 
+    public Material StaticMaterial;
+
     private bool lost = false;
     public bool Lost => lost;
 
@@ -134,6 +136,12 @@ public class GameManager : BehaviourSingleton<GameManager>
     {
         UnlockedUpgrades |= up;
         ++upgrades;
+
+        if (up == Upgrade.STATIC)
+        {
+            // hacky janky
+            GameObject.Find("Head").GetComponentInChildren<MeshRenderer>().material = StaticMaterial;
+        }
     }
 
     public void OnEnemyKilled()

@@ -1262,6 +1262,7 @@ MonoBehaviour:
   Schmunny: 0
   paybacks: 0
   PaybacksText: {fileID: 307711998}
+  StaticMaterial: {fileID: 2100000, guid: 0359dd2061d8d774a8ab5ae5a0c41294, type: 2}
 --- !u!4 &2081033779
 Transform:
   m_ObjectHideFlags: 0
